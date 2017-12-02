@@ -5,6 +5,7 @@
 #include "ModuleTime.h"
 #include <iostream>
 #include <sstream>
+#include <chrono>
 
 #include <iomanip>
 #include <stdio.h>  /* defines FILENAME_MAX */
@@ -13,6 +14,8 @@
     #define GetCurrentDir _getcwd
 #else
 #include <unistd.h>
+#include <evdns.h>
+
 #define GetCurrentDir getcwd
 #endif
 
@@ -42,14 +45,14 @@ void ModuleTime::draw() {
     if(initialsecs == 0)
         initialsecs = (int) timet;
     tm* time = localtime(&timet);
+
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned long long hs =
+            (unsigned long long)(tv.tv_sec) * 100 +
+            (unsigned long long)(tv.tv_usec) / 100;
+
     std::stringstream ss;
-//    time %= 24*60*60;
-//    int hours = time / (60 * 60);
-//    time %= 60*60;
-//    int minutes = time / 60;
-//    time %= 60;
-//    int seconds = time;
-    //std::cout << hours;
 
     float timeAndDateRatio = 0.6;
     int padding = 10;
@@ -62,13 +65,12 @@ void ModuleTime::draw() {
     float scale = std::min(scaleX, scaleY);
     text.setCharacterSize(80 * scale);
     ss << std::setw(2) << std::setfill('0') << time->tm_hour << ":";
-//    ss << std::setw(2) << std::setfill('0') << (time->tm_sec % 10) << ":";
     ss << std::setw(2) << std::setfill('0') << time->tm_min << ":";
     ss << std::setw(2) << std::setfill('0') << time->tm_sec;
+//    ss << ":" << std::setw(2) << std::setfill('0') << (hs % 100); // Uncomment this to add hundreds of a second to the clock
     text.setString(ss.str());
-//    text.setCharacterSize(60 + ((int) timet - initialsecs));
-//    std::cout << scaleX << " " << scaleY << std::endl;
-    text.setColor(sf::Color::White);
+
+    text.setFillColor(sf::Color::White);
     text.setPosition((getWidth() - scale * textrect.width) / 2, 0);
     t->draw(text);
 
