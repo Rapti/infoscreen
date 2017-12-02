@@ -3,7 +3,7 @@ project(Infoscreen)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11")
 set(EXECUTABLE_NAME "Infoscreen")
-set(SOURCE_FILES main.cpp main.h Screen.cpp Screen.h Module.cpp Module.h ModuleTime.cpp ModuleTime.h ModuleEmpty.cpp ModuleEmpty.h ModuleSystemusage.cpp ModuleSystemusage.h ModuleRam.cpp ModuleRam.h ModuleSwp.cpp ModuleSwp.h ModuleCpu.cpp ModuleCpu.h ModuleDatausage.cpp ModuleDatausage.h ModuleInvisible.cpp ModuleInvisible.h)
+set(SOURCE_FILES src/main.cpp src/main.h src/Screen.cpp src/Screen.h src/Module.cpp src/Module.h src/ModuleTime.cpp src/ModuleTime.h src/ModuleEmpty.cpp src/ModuleEmpty.h src/ModuleSystemusage.cpp src/ModuleSystemusage.h src/ModuleRam.cpp src/ModuleRam.h src/ModuleSwp.cpp src/ModuleSwp.h src/ModuleCpu.cpp src/ModuleCpu.h src/ModuleDatausage.cpp src/ModuleDatausage.h src/ModuleInvisible.cpp src/ModuleInvisible.h)
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
