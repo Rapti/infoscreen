@@ -5,7 +5,6 @@
 #ifndef INFOSCREEN_MODULERAM_H
 #define INFOSCREEN_MODULERAM_H
 
-
 #include "ModuleSystemusage.h"
 
 class ModuleRam: public ModuleSystemusage {

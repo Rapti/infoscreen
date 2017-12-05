@@ -13,7 +13,7 @@
 
 class ModuleSystemusage: public Module {
 public:
-    ModuleSystemusage(std::string);
+    ModuleSystemusage(std::string host);
     virtual ~ModuleSystemusage();
 protected:
     static std::unordered_map<std::string, std::list<ModuleSystemusage*>*> map;

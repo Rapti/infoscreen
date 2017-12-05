@@ -15,21 +15,16 @@
 
 class Screen {
 private:
-//    std::list<Module*> modules;
-    std::list<std::list<Module*>*>* columns;
     void renderLoop();
     sf::Texture* bg;
     sf::Sprite* bgs;
+    Grid* g;
 public:
     Screen();
     virtual ~Screen();
     void run();
-    void addModule(Module* m);
     void updateSize();
     sf::RenderWindow* getWindow();
-
-    const int margin = 16;
-    const int colcount = 3;
 
     static Screen* singleton;
     sf::View view;

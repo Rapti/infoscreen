@@ -22,15 +22,8 @@
 
 
 
-ModuleTime::ModuleTime(): Module() {
+ModuleTime::ModuleTime() : Module() {
 
-//    char cCurrentPath[FILENAME_MAX];
-//
-//    GetCurrentDir(cCurrentPath, sizeof(cCurrentPath));
-//
-//    cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
-//
-//    printf ("The current working directory is %s", cCurrentPath);
 }
 
 ModuleTime::~ModuleTime() {
@@ -60,8 +53,8 @@ void ModuleTime::draw() {
     text.setCharacterSize(80);
     text.setString("00:00:00");
     sf::FloatRect textrect = text.getLocalBounds();
-    float scaleX = (getWidth() - 2*padding) / textrect.width;
-    float scaleY = (timeAndDateRatio * getHeight() - 2*padding) / (textrect.height);
+    float scaleX = (getDisplayWidth() - 2*padding) / textrect.width;
+    float scaleY = (timeAndDateRatio * getDisplayHeight() - 2*padding) / (textrect.height);
     float scale = std::min(scaleX, scaleY);
     text.setCharacterSize(80 * scale);
     ss << std::setw(2) << std::setfill('0') << time->tm_hour << ":";
@@ -71,7 +64,7 @@ void ModuleTime::draw() {
     text.setString(ss.str());
 
     text.setFillColor(sf::Color::White);
-    text.setPosition((getWidth() - scale * textrect.width) / 2, 0);
+    text.setPosition((getDisplayWidth() - scale * textrect.width) / 2, 0);
     t->draw(text);
 
 
@@ -82,13 +75,13 @@ void ModuleTime::draw() {
     text.setString(ss.str());
     textrect = text.getLocalBounds();
     padding = 10;
-    scaleX = (getWidth() - 2*padding) / textrect.width;
-    scaleY = ((1-timeAndDateRatio) * getHeight() - 2*padding) / textrect.height;
+    scaleX = (getDisplayWidth() - 2*padding) / textrect.width;
+    scaleY = ((1-timeAndDateRatio) * getDisplayHeight() - 2*padding) / textrect.height;
     scale = std::min(scaleX, scaleY);
     text.setCharacterSize(80 * scale);
 
-    text.setColor(sf::Color::White);
-    text.setPosition((getWidth() - scale * textrect.width) / 2, getHeight() * timeAndDateRatio + 0);
+    text.setFillColor(sf::Color::White);
+    text.setPosition((getDisplayWidth() - scale * textrect.width) / 2, getDisplayHeight() * timeAndDateRatio + 0);
     t->draw(text);
 
 

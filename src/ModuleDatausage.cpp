@@ -7,7 +7,7 @@
 #include "ModuleDatausage.h"
 #include "Screen.h"
 
-ModuleDatausage::ModuleDatausage() {
+ModuleDatausage::ModuleDatausage() : Module() {
     upload = 0;
     download = 0;
     limit = 0;
@@ -32,12 +32,8 @@ ModuleDatausage::~ModuleDatausage() {
 }
 
 
-float ModuleDatausage::getWidth() {
-    return (Screen::singleton->view.getSize().x - 2 * Screen::singleton->margin);
-}
 
 void ModuleDatausage::refreshLoop() {
-//    const char* cmd = ("ssh " + host + " ~/catest.sh").c_str();
     sf::Clock clock;
     std::string str = "curl -s 10.4.11.1/traffic.php | head -n1";
     const char *cmd = str.c_str();
@@ -76,8 +72,8 @@ void ModuleDatausage::draw() {
 
     int xoffset = 0;
     int yoffset = 0;
-    float tlheight = getHeight() - 2*yoffset;
-    float tlwidth = getWidth() - 2*xoffset;
+    float tlheight = getDisplayHeight() - 2*yoffset;
+    float tlwidth = getDisplayWidth() - 2*xoffset;
 
     mutex->lock();
     if (limit > 0) {
@@ -153,8 +149,6 @@ void ModuleDatausage::draw() {
 
 
 std::string ModuleDatausage::exec(const char* cmd) {
-//        {std::cout << "Error opening pipe" << std::endl; return "";}
-
     char buffer[128];
     std::string result = "";
     std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);

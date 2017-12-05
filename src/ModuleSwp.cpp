@@ -5,10 +5,9 @@
 #include "ModuleSwp.h"
 #include "Screen.h"
 
-ModuleSwp::ModuleSwp(std::string host): ModuleSystemusage(host) {
+ModuleSwp::ModuleSwp(std::string host) : ModuleSystemusage(host) {
 
 }
-
 
 ModuleSwp::~ModuleSwp() {
 
@@ -17,8 +16,8 @@ ModuleSwp::~ModuleSwp() {
 void ModuleSwp::draw() {
     int xoffset = 0;
     int yoffset = 0;
-    float tlheight = getHeight() - 1.5*yoffset;
-    float tlwidth = getWidth() - 2*xoffset;
+    float tlheight = getDisplayHeight() - 1.5*yoffset;
+    float tlwidth = getDisplayWidth() - 2*xoffset;
     mutex->lock();
     if (totalswp > 0) {
         for(int i = 0; i < arrlength; ++i) {

@@ -17,7 +17,6 @@ public:
     virtual ~ModuleDatausage();
     std::mutex* mutex;
     virtual void draw();
-    virtual float getWidth();
 private:
     int upload;
     int download;

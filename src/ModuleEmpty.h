@@ -11,10 +11,9 @@ class ModuleEmpty: public Module {
 public:
     ModuleEmpty();
     virtual ~ModuleEmpty();
-    virtual float getHeight();
+    void draw();
 private:
 protected:
-    void draw();
 };
 
 

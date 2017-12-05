@@ -3,21 +3,14 @@
 //
 
 #include "ModuleEmpty.h"
-#include "Screen.h"
 
-ModuleEmpty::ModuleEmpty(): Module() {
+ModuleEmpty::ModuleEmpty() : Module() {
 
 }
 
 ModuleEmpty::~ModuleEmpty() {
 }
 
-float ModuleEmpty::getHeight() {
-    return defaultHeight * 2 + Screen::singleton->margin;
-}
-
-
-
 void ModuleEmpty::draw() {
-
+    t->clear(sf::Color(255, 255, 255, 0));
 }

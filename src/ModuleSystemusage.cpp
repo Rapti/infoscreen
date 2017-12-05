@@ -9,19 +9,9 @@
 #include <math.h>
 
 
-//int* ModuleSystemusage::cpu;
-//int* ModuleSystemusage::mem;
-//int* ModuleSystemusage::swp;
-//int* ModuleSystemusage::totalmem;
-//int* ModuleSystemusage::totalswp;
-//int* ModuleSystemusage::tlindex;
-//bool* ModuleSystemusage::active;
-//std::thread* ModuleSystemusage::thread;
-//std::mutex* ModuleSystemusage::mutex;
-
 std::unordered_map<std::string, std::list<ModuleSystemusage*>*> ModuleSystemusage::map;
 
-ModuleSystemusage::ModuleSystemusage(std::string host): Module() {
+ModuleSystemusage::ModuleSystemusage(std::string host) : Module() {
     ModuleSystemusage::host = host;
     if(map.count(host)) {
         ModuleSystemusage* ref = map[host]->front();
@@ -97,8 +87,8 @@ void ModuleSystemusage::draw() {
 
     int xoffset = 0;
     int yoffset = 0;
-    float tlheight = getHeight() - 1.5*yoffset;
-    float tlwidth = getWidth() - 2*xoffset;
+    float tlheight = getDisplayHeight() - 1.5*yoffset;
+    float tlwidth = getDisplayWidth() - 2*xoffset;
 
 
     for(int i = 0; i < arrlength; ++i) {
@@ -112,13 +102,11 @@ void ModuleSystemusage::draw() {
         line.setSize(sf::Vector2f(std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2)) + 3, 3));
         line.setRotation(std::atan((p2.y - p1.y) / (p2.x - p1.x)) * 180/M_PIl);
         t->draw(line);
-//            Screen::singleton->window->draw(line);
     }
 
 }
 
 void ModuleSystemusage::refreshLoop() {
-//    const char* cmd = ("ssh " + host + " ~/catest.sh").c_str();
     sf::Clock clock;
     std::string str = "ssh "+host+" free\\; cat /proc/stat \\| head -n1";
     const char* cmd = str.c_str();
@@ -183,8 +171,6 @@ void ModuleSystemusage::refreshLoop() {
 
         if(lastcputime > 0) {
             cpu[*tlindex] = (cputime - lastcputime) / (total - lastcputotal);
-//            std::cout << "Idle: " << idle - lastidle << "   Total: " << total - lastcputime << "  CPU: " << cpu[*tlindex] << std::endl;
-//            std::cout << "CPU: " <<  cpu[*tlindex];
             *totalcpu = 1;
         }
 
@@ -201,8 +187,6 @@ void ModuleSystemusage::refreshLoop() {
 }
 
 std::string ModuleSystemusage::exec(const char* cmd) {
-//        {std::cout << "Error opening pipe" << std::endl; return "";}
-
         char buffer[128];
         std::string result = "";
         std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);

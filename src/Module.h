@@ -6,6 +6,9 @@
 #define INFOSCREEN_MODULE_H
 
 #include <SFML/Graphics.hpp>
+#include "Grid.h"
+
+class Grid;
 
 class Module {
 public:
@@ -15,13 +18,32 @@ public:
     sf::RenderTexture* t;
     sf::RenderTexture* render();
 
-    virtual float getWidth();
-    virtual float getHeight();
+    int getWidth();
+    int getHeight();
+    float getDisplayWidth();
+    float getDisplayHeight();
+    int getX();
+    int getY();
+    float getDisplayX();
+    float getDisplayY();
+
     virtual bool drawBackground();
 
-    void updateSize();
+    void updateDisplaySize();
+
+    void setGrid(Grid*);
 
     const int defaultHeight = 128;
+
+protected:
+public:
+    void setX(int x);
+
+    void setY(int y);
+
+    void setWidth(int w);
+
+    void setHeight(int h);
 
 protected:
     int x, y, w, h;
@@ -29,6 +51,7 @@ protected:
     int initialsecs = 0;
     sf::Font f;
     bool drawBg = true;
+    Grid* grid;
 };
 
 
