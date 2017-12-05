@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <cmath>
+#include <iomanip>
 
 #include "ModuleDatausage.h"
 #include "Screen.h"
@@ -41,11 +43,26 @@ void ModuleDatausage::refreshLoop() {
         std::string result = exec(cmd);
         mutex->lock();
 
-        upload = regmatch(result, std::regex("gesendet[.: ]+(\\d+)"));
-        download = regmatch(result, std::regex("empfangen[.: ]+(\\d+)"));
-        limit = regmatch(result, std::regex("Transfer Limit[.: ]+(\\d+)"));
+        std::string unit;
+
+        upload = extractint(result, std::regex("gesendet[.: ]+(\\d+)"));
+        unit = extractstring(result, std::regex("gesendet[.: ]+\\d+ (Bytes|KiloBytes|MegaBytes)"));
+        if(unit == "Bytes") {
+            upload /= 1024 * 1024;
+        } else if(unit == "KiloBytes") {
+            upload /= 1024;
+        }
+        download = extractint(result, std::regex("empfangen[.: ]+(\\d+)"));
+        unit = extractstring(result, std::regex("empfangen[.: ]+\\d+ (Bytes|KiloBytes|MegaBytes)"));
+        if(unit == "Bytes") {
+            download /= 1024 * 1024;
+        } else if(unit == "KiloBytes") {
+            download /= 1024;
+        }
+        limit = extractint(result, std::regex("Transfer Limit[.: ]+(\\d+)"));
 
 //        std::cout << "Gesendet: " << upload << "    Empfangen: " << download << "   Limit: " << limit << std::endl;
+
 
         mutex->unlock();
 
@@ -57,13 +74,17 @@ void ModuleDatausage::refreshLoop() {
     }
 }
 
-int ModuleDatausage::regmatch(std::string s, std::regex e) {
+int ModuleDatausage::extractint(std::string s, std::regex e) {
+    return atoi(extractstring(s, e).c_str());
+}
+
+std::string ModuleDatausage::extractstring(std::string s, std::regex e) {
     std::smatch m;
-    if (std::regex_search (s,m,e)) {
+    if (std::regex_search (s, m, e)) {
         int i = 0;
         for (std::string x:m) {
             if (i++ == 0) continue;
-            return atoi(x.c_str());
+            return x;
         }
     }
 }
@@ -83,7 +104,7 @@ void ModuleDatausage::draw() {
         std::tm * tm = std::localtime(&ttime);
         float week = (60 * 60 * 24 * 7);
         //float weekprogress = ((time - (60*60*24)) % week) * 1.0 / week;
-        float weekprogress = (((((tm->tm_wday + 2) % 7) * 24 + tm->tm_hour) * 60 + tm->tm_min) * 60 + tm->tm_sec) / week;
+        float weekprogress = ((((tm->tm_wday + 2) % 7) * 24 + tm->tm_hour) * 60 + tm->tm_min) * 60 + tm->tm_sec;
 
 
         dayline.setSize(sf::Vector2f(1, tlheight));
@@ -92,18 +113,26 @@ void ModuleDatausage::draw() {
             t->draw(dayline);
         }
 
-
+        
         rect.setPosition(xoffset, yoffset);
-        rect.setSize(sf::Vector2f(tlwidth * ((upload + download) * 1.0 / limit), tlheight));
+        int total = upload + download;
+        rect.setSize(sf::Vector2f(tlwidth * (total * 1.0 / limit), tlheight));
         t->draw(rect);
         line.setSize(sf::Vector2f(3, tlheight));
-        line.setPosition(xoffset + tlwidth * ((upload) * 1.0 / limit), yoffset);
+        line.setPosition(xoffset + tlwidth * (upload * 1.0 / limit), yoffset);
         t->draw(line);
-        line.setPosition(xoffset + tlwidth * ((upload + download) * 1.0 / limit), yoffset);
+        line.setPosition(xoffset + tlwidth * (total * 1.0 / limit), yoffset);
         t->draw(line);
 
 
-        weekprogress *= tlwidth;
+        int timediffsecs;
+        if(total > limit)
+            timediffsecs = weekprogress - (week);
+        else
+            timediffsecs = weekprogress - (week * total / limit);
+
+
+        weekprogress *= tlwidth / week;
         int trianglesize = 9;
         tri[0].position = sf::Vector2f(xoffset + weekprogress - trianglesize, yoffset);
         tri[1].position = sf::Vector2f(xoffset + weekprogress + trianglesize, yoffset);
@@ -122,21 +151,37 @@ void ModuleDatausage::draw() {
         } else {
             std::stringstream ss;
             if(limit - upload - download >= 1024) {
-                ss << (limit - download - upload) * 100 / 1024 / 100.0;
+                ss << (limit - total) * 100 / 1024 / 100.0;
                 ss << " GB verbleiben";
             } else {
-                ss << (limit - download - upload);
+                ss << (limit - total);
                 ss << " MB verbleiben";
             }
+            ss << std::endl;
+
+            if(timediffsecs < 0) {
+                ss << "-";
+                timediffsecs *= -1;
+            }
+//            ss << floor(timediffsecs / (24 * 60 * 60)) << ":";
+//            timediffsecs %= 24 * 60 * 60;
+            ss << std::setw(2) << std::setfill('0') << floor(timediffsecs / (60 * 60)) << ":";
+            timediffsecs %= 60 * 60;
+            ss << std::setw(2) << std::setfill('0') << floor(timediffsecs / 60) << ":";
+            timediffsecs %= 60;
+            ss << std::setw(2) << std::setfill('0') << timediffsecs;
+
+
             text.setString(ss.str());
+
         }
-        float pos = xoffset + tlwidth * ((upload + download) * 1.0 / limit) + 20;
+        float pos = xoffset + tlwidth * (total * 1.0 / limit) + 20;
         float textwidth = text.getLocalBounds().width + 40;
 
-        if(tlwidth - (xoffset + tlwidth * ((upload + download) * 1.0 / limit)) < textwidth) {
+        if(tlwidth - (xoffset + tlwidth * (total * 1.0 / limit)) < textwidth) {
             pos -= textwidth;
-            if (pos < xoffset + tlwidth * ((upload) * 1.0 / limit))
-                pos = xoffset + tlwidth * ((upload) * 1.0 / limit) - textwidth;
+            if (pos < xoffset + tlwidth * (upload * 1.0 / limit))
+                pos = xoffset + tlwidth * (upload * 1.0 / limit) - textwidth;
             if (pos + textwidth > tlwidth)
                 pos = tlwidth - textwidth;
         }

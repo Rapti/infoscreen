@@ -30,10 +30,12 @@ private:
     sf::VertexArray tri;
 
     void refreshLoop();
-    int regmatch(std::string, std::regex);
+    int extractint(std::string, std::regex);
     bool active;
     std::thread* thread;
     std::string exec(const char* cmd);
+
+    std::string extractstring(std::string s, std::regex e);
 };
 
 
