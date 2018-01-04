@@ -71,7 +71,7 @@ void ModuleTime::draw() {
     text.setCharacterSize(80);
 
     ss.str(std::string());
-    ss << time->tm_mday << "." << time->tm_mon << "." << (time->tm_year + 1900);
+    ss << time->tm_mday << "." << time->tm_mon + 1 << "." << (time->tm_year + 1900);
     text.setString(ss.str());
     textrect = text.getLocalBounds();
     padding = 10;
