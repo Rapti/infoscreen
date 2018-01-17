@@ -12,6 +12,7 @@
 
 
 class ModuleSystemusage: public Module {
+
 public:
     ModuleSystemusage(std::string host);
     virtual ~ModuleSystemusage();
@@ -24,11 +25,11 @@ protected:
     int lastcputime;
     int lastcputotal;
     double* cpu;
-    int* mem;
-    int* swp;
-    int* totalmem;
-    int* totalswp;
-    int* totalcpu;
+    long* mem;
+    long* swp;
+    long* totalmem;
+    long* totalswp;
+    long* totalcpu;
     int* tlindex;
     sf::Color bgcolor = sf::Color(255, 255, 255, 64);
     sf::Color linecolor = sf::Color::White;
@@ -36,6 +37,9 @@ protected:
     sf::VertexArray bg;
     std::mutex* mutex;
     virtual void draw();
+
+	std::__cxx11::string bytesToHumanReadableFormat(const long bytes) const;
+
 private:
     void refreshLoop();
     bool active;

@@ -2,11 +2,13 @@
 // Created by leon on 15.12.16.
 //
 
+#include "ModuleRam.h"
 #include "ModuleSystemusage.h"
 #include "Screen.h"
 #include <sstream>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <iomanip>
 
 
 std::unordered_map<std::string, std::list<ModuleSystemusage*>*> ModuleSystemusage::map;
@@ -29,15 +31,15 @@ ModuleSystemusage::ModuleSystemusage(std::string host) : Module() {
         lastcputime = 0;
         lastcputotal = 0;
         cpu = new double[arrlength];
-        mem = new int[arrlength];
-        swp = new int[arrlength];
+        mem = new long[arrlength];
+        swp = new long[arrlength];
         for(int i = 0; i < arrlength; ++i) {
             cpu[i] = mem[i] = swp[i] = -1;
 
         }
-        totalmem = new int(0);
-        totalswp = new int(0);
-        totalcpu = new int(0);
+        totalmem = new long(0);
+        totalswp = new long(0);
+        totalcpu = new long(0);
         tlindex = new int(0);
         mutex = new std::mutex;
         active = true;
@@ -108,7 +110,7 @@ void ModuleSystemusage::draw() {
 
 void ModuleSystemusage::refreshLoop() {
     sf::Clock clock;
-    std::string str = "ssh "+host+" free\\; cat /proc/stat \\| head -n1";
+    std::string str = "ssh "+host+" free -b \\; cat /proc/stat \\| head -n1";
     const char* cmd = str.c_str();
     while(active) {
         std::string result = exec(cmd);
@@ -197,4 +199,22 @@ std::string ModuleSystemusage::exec(const char* cmd) {
                 result += buffer;
         }
         return result;
+}
+
+std::__cxx11::string ModuleSystemusage::bytesToHumanReadableFormat(const long bytes) const {
+	std::stringstream ss;
+	if(bytes > 1024 * 1024 * 1024) {
+		ss << 100 * bytes / (1024 * 1024 * 1024) / 100.0;
+		ss << " GB";
+	} else if(bytes > 1024 * 1024) {
+		ss  << 100 * bytes / (1024 * 1024) / 100.0;
+		ss << " MB";
+	} else if(bytes > 1024) {
+		ss << 100 * bytes / 1024 / 100.0;
+		ss << " KB";
+	} else {
+		ss << std::setw(6) << std::setfill(' ') << bytes;
+		ss << "  B";
+	}
+	return ss.str();
 }

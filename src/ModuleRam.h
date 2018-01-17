@@ -12,7 +12,6 @@ public:
     ModuleRam(std::string);
     virtual ~ModuleRam();
     void draw();
-private:
 
 };
 
