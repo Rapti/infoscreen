@@ -4,12 +4,11 @@
 
 #include "Screen.h"
 #include "ModuleTime.h"
-#include "ModuleEmpty.h"
 #include "ModuleRam.h"
 #include "ModuleSwp.h"
 #include "ModuleCpu.h"
 #include "ModuleDatausage.h"
-#include "ModuleInvisible.h"
+#include "ModulePing.h"
 
 
 Screen* Screen::singleton;
@@ -56,6 +55,7 @@ void Screen::run() {
     g->addModule(new ModuleSwp("gaming-pc"), 1, 1, 1, 1);
     g->addModule(new ModuleCpu("gaming-pc"), 2, 1, 1, 1);
     g->addModule(new ModuleTime(), 0, 2, 1, 1);
+    g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "einspluseins", "server.raptilic.us"}, {"Bluelou", "PC", "Telefon", "Kimsufi"}), 1, 2, 1, 1);
 
 
     std::cout << "All Modules added" << std::endl;
