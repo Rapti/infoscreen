@@ -4,12 +4,10 @@
 
 #include <sstream>
 #include "ModuleRam.h"
-#include "Screen.h"
 
 ModuleRam::ModuleRam(std::string host) : ModuleSystemusage(host) {
 
 }
-
 
 ModuleRam::~ModuleRam() {
 
@@ -22,18 +20,35 @@ void ModuleRam::draw() {
     float tlwidth = getDisplayWidth() - 2*xoffset;
 
     mutex->lock();
-    if (totalmem > 0) {
-        for(int i = 0; i < arrlength; ++i) {
-            float m = mem[(i + 1 + *tlindex) % arrlength];
-            if(m == -1)
-                m = 0;
-            float y = tlheight -
-                      ((m / *totalmem) *
-                       tlheight);
-            if (y > tlheight)
-                y = tlheight;
-            bg[2 * i].position = sf::Vector2f(xoffset + (tlwidth / (arrlength-1)) * i, yoffset + y);
-        }
+    if (!snapshots->empty()) {
+		SystemusageSnapshot* last;
+		for(std::list<SystemusageSnapshot*>::iterator i = snapshots->begin(); i != snapshots->end();) {
+			std::list<sf::Vector2f*> points;
+			for(; i != snapshots->end();) {
+				if(*i) {
+					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < 3) {
+						points.push_back(new sf::Vector2f((1 - (*i)->getAge().asSeconds() / 180.0) * getDisplayWidth(),
+														  (1 - (float) (*i)->getMem() / (*i)->getTotalmem()) *
+														  getDisplayHeight()));
+						last = *i;
+						++i;
+					} else {
+						last = nullptr;
+						break;
+					}
+				} else {
+					++i;
+					break;
+				}
+
+			}
+			if(points.size() > 1)
+				ModuleSystemusage::draw(points);
+			for(sf::Vector2f* v: points) delete v;
+			points.clear();
+		}
+
+
 		int padding = 10;
 		sf::Text text;
 		text.setFont(f);
@@ -48,22 +63,20 @@ void ModuleRam::draw() {
 		text.setCharacterSize(80 * scale);
 
 		std::stringstream ss;
-		ss << bytesToHumanReadableFormat(mem[*tlindex]);
+		ss << bytesToHumanReadableFormat(snapshots->back()->getMem());
 		text.setString(ss.str());
 		text.setPosition(padding, padding - 6);
-		t->draw(text);
+		this->t->draw(text);
 //        ss << " / ";
 		ss.str(std::string());
-		ss << bytesToHumanReadableFormat(*totalmem);
+		ss << bytesToHumanReadableFormat(snapshots->back()->getTotalmem());
 		mutex->unlock();
 
 
 		text.setString(ss.str());
 		textrect = text.getLocalBounds();
 		text.setPosition(getDisplayWidth() - textrect.width - padding *2, getDisplayHeight() - textrect.height - padding*2 - 6);
-//		sf::CircleShape lole(3); lole.setPosition(text.getPosition()); t->draw(lole);
-		t->draw(text);
-		ModuleSystemusage::draw();
+		this->t->draw(text);
     } else
         mutex->unlock();
 }
