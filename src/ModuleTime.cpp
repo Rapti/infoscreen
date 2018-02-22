@@ -3,17 +3,16 @@
 //
 
 #include "ModuleTime.h"
-#include <iostream>
 #include <sstream>
 #include <chrono>
 
 #include <iomanip>
-#include <stdio.h>  /* defines FILENAME_MAX */
+
 #ifdef WINDOWS
 #include <direct.h>
     #define GetCurrentDir _getcwd
 #else
-#include <unistd.h>
+
 #include <evdns.h>
 
 #define GetCurrentDir getcwd
