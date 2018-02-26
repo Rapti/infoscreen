@@ -22,10 +22,8 @@ protected:
     std::string host;
     static const int cycleDuration = 180; // three minutes
     static const int updateInterval = 200;
-    static const int arrlength = cycleDuration / updateInterval;
     std::list<SystemusageSnapshot*>* snapshots;
     sf::Color bgcolor = sf::Color(255, 255, 255, 64);
-    sf::Color linecolor = sf::Color::White;
     sf::RectangleShape line;
     std::mutex* mutex;
     virtual void draw();

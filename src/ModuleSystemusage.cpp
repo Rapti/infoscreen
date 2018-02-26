@@ -6,7 +6,6 @@
 #include "ModuleSystemusage.h"
 #include "Screen.h"
 #include <sstream>
-#define _USE_MATH_DEFINES
 #include <math.h>
 #include <iomanip>
 
@@ -55,36 +54,6 @@ ModuleSystemusage::~ModuleSystemusage() {
 
 
 void ModuleSystemusage::draw() {
-//    sf::Text text;
-//    text.setFont(f);
-//    std::stringstream ss;
-//    ss << "Mem: " << (mem[tlindex] / 1048576.0) << " GB" << std::endl;
-//    ss << "Swp: " << (swp[tlindex] / 1048576.0) << " GB" << std::endl;
-//    text.setString(ss.str());
-//    text.setCharacterSize(30);
-//    text.setColor(sf::Color::White);
-//    text.setPosition(10, 10);
-//    t->draw(text);
-//    totalmem = arrlength;
-
-//    int xoffset = 0;
-//    int yoffset = 0;
-//    float tlheight = getDisplayHeight() - 1.5*yoffset;
-//    float tlwidth = getDisplayWidth() - 2*xoffset;
-//
-//
-//    for(int i = 0; i < arrlength; ++i) {
-//        bg[2*i+1].position = sf::Vector2f(xoffset + (tlwidth / (arrlength-1)) * i, yoffset + tlheight);
-//    }
-//    t->draw(bg);
-//    for(int i = 1; i < arrlength; ++i) {
-//        sf::Vector2f p1 = bg[2*i-2].position;
-//        sf::Vector2f p2 = bg[2*i].position;
-//        line.setPosition(p1.x - 1.5, p1.y - 1.5);
-//        line.setSize(sf::Vector2f(std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2)) + 3, 3));
-//        line.setRotation(std::atan((p2.y - p1.y) / (p2.x - p1.x)) * 180/M_PIl);
-//        t->draw(line);
-//    }
 
 }
 
@@ -104,7 +73,7 @@ void ModuleSystemusage::refreshLoop() {
             if(word == "Mem:" || word == "Speicher:")
                 break;
         }
-		long totalmem, mem, totalswp, swp, totalcpu, cpu, dump;
+		long totalmem = -1, mem = -1, totalswp = -1, swp = -1, totalcpu = -1, cpu = -1, dump = -1;
         iss >> totalmem;        // total
         iss >> dump;    // Used
         iss >> dump;    // Free
@@ -148,14 +117,13 @@ void ModuleSystemusage::refreshLoop() {
 
 
 		mutex->lock();
-		std::time_t now;
-		std::time(&now);
 		while(!snapshots->empty() && (snapshots->front() == nullptr || snapshots->front()->getAge().asSeconds() > 200)) {
 			delete snapshots->front();
 			snapshots->pop_front();
 		}
 
-		snapshots->push_back(new SystemusageSnapshot(c, cpu, totalcpu, mem, totalmem, swp, totalswp));
+		if(cpu >= 0 && totalcpu >= 0 && mem >= 0 && totalmem >= 0 && swp >= 0 && totalswp >= 0)
+			snapshots->push_back(new SystemusageSnapshot(c, cpu, totalcpu, mem, totalmem, swp, totalswp));
         mutex->unlock();
 
         int d = updateInterval - clock.getElapsedTime().asMilliseconds();

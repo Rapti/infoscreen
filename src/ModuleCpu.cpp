@@ -28,7 +28,6 @@ void ModuleCpu::draw() {
 	if (!snapshots->empty()) {
 		SystemusageSnapshot* last;
 		double displayvalue = -1;
-		SystemusageSnapshot* xd = nullptr; // Wenn ich das lösche, gibt's 'nen Segfault. Obwohl der Pointer nicht benutzt wird. Was zum Fick?
 		for (std::list<SystemusageSnapshot*>::iterator i = ++snapshots->begin(); i != snapshots->end();) {
 			std::list<sf::Vector2f*> points;
 			for (; i != snapshots->end();) {
