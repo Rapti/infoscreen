@@ -28,6 +28,7 @@ ModuleSystemusage::ModuleSystemusage(std::string host) : Module() {
     }
     map[host]->push_back(this);
     line.setOrigin(1.5, 1.5);
+	line.setFillColor(linecolor);
 }
 
 ModuleSystemusage::~ModuleSystemusage() {

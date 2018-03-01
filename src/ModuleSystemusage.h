@@ -24,6 +24,7 @@ protected:
     static const int updateInterval = 200;
     std::list<SystemusageSnapshot*>* snapshots;
     sf::Color bgcolor = sf::Color(255, 255, 255, 64);
+    sf::Color linecolor = sf::Color::White;
     sf::RectangleShape line;
     std::mutex* mutex;
     virtual void draw();
