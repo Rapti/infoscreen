@@ -10,32 +10,28 @@
 #include <list>
 #include <unordered_map>
 
+class SystemusageSnapshot;
 
 class ModuleSystemusage: public Module {
+
 public:
     ModuleSystemusage(std::string host);
     virtual ~ModuleSystemusage();
 protected:
     static std::unordered_map<std::string, std::list<ModuleSystemusage*>*> map;
     std::string host;
-    static const int cycleDuration = 180000;
+    static const int cycleDuration = 180; // three minutes
     static const int updateInterval = 200;
-    static const int arrlength = cycleDuration / updateInterval;
-    int lastcputime;
-    int lastcputotal;
-    double* cpu;
-    int* mem;
-    int* swp;
-    int* totalmem;
-    int* totalswp;
-    int* totalcpu;
-    int* tlindex;
+    std::list<SystemusageSnapshot*>* snapshots;
     sf::Color bgcolor = sf::Color(255, 255, 255, 64);
     sf::Color linecolor = sf::Color::White;
     sf::RectangleShape line;
-    sf::VertexArray bg;
     std::mutex* mutex;
     virtual void draw();
+	void draw(std::list<sf::Vector2f*>);
+
+	std::__cxx11::string bytesToHumanReadableFormat(const long bytes) const;
+
 private:
     void refreshLoop();
     bool active;
@@ -43,5 +39,31 @@ private:
     std::string exec(const char* cmd);
 };
 
+
+class SystemusageSnapshot {
+private:
+	const sf::Clock c;
+	const long cpu;
+	const long totalcpu;
+	const long mem;
+	const long totalmem;
+	const long swp;
+	const long totalswp;
+public:
+	const long getCpu() const;
+	const long getTotalcpu() const;
+	const long getMem() const;
+	const long getTotalmem() const;
+	const long getSwp() const;
+	const long getTotalswp() const;
+	const float getCpuSince(SystemusageSnapshot*) const;
+
+public:
+	SystemusageSnapshot(sf::Clock, long, long, long, long, long, long);
+	virtual ~SystemusageSnapshot();
+
+	sf::Time getAge();
+
+};
 
 #endif //INFOSCREEN_MODULESYSTEMUSAGE_H
