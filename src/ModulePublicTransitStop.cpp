@@ -162,6 +162,11 @@ void ModulePublicTransitStop::refreshLoop() {
 //		std::cout << data["preformatted"][0][1].GetString() << std::endl;
 		mutex->lock();
 
+		while(!trains.empty()) {
+			delete trains.front();
+			trains.pop_front();
+		}
+
 		for(rapidjson::Value::ValueIterator i =  data["raw"].Begin(); i != data["raw"].End(); ++i) {
 			Train* t = new Train();
 			t->setName((*i)["line"].GetString());
