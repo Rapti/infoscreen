@@ -159,20 +159,20 @@ void ModuleDatausage::draw() {
             }
             ss << std::endl;
 
-            if(timediffsecs < 0) {
-                ss << "-";
-                timediffsecs *= -1;
-            }
-//            ss << floor(timediffsecs / (24 * 60 * 60)) << ":";
-//            timediffsecs %= 24 * 60 * 60;
-            ss << std::setw(2) << std::setfill('0') << floor(timediffsecs / (60 * 60)) << ":";
-            timediffsecs %= 60 * 60;
-            ss << std::setw(2) << std::setfill('0') << floor(timediffsecs / 60) << ":";
-            timediffsecs %= 60;
-            ss << std::setw(2) << std::setfill('0') << timediffsecs;
-
-
-            text.setString(ss.str());
+//            if(timediffsecs < 0) {
+//                ss << "-";
+//                timediffsecs *= -1;
+//            }
+////            ss << floor(timediffsecs / (24 * 60 * 60)) << ":";
+////            timediffsecs %= 24 * 60 * 60;
+//            ss << std::setw(2) << std::setfill('0') << floor(timediffsecs / (60 * 60)) << ":";
+//            timediffsecs %= 60 * 60;
+//            ss << std::setw(2) << std::setfill('0') << floor(timediffsecs / 60) << ":";
+//            timediffsecs %= 60;
+//            ss << std::setw(2) << std::setfill('0') << timediffsecs;
+//
+//
+//            text.setString(ss.str());
 
         }
         float pos = xoffset + tlwidth * (total * 1.0 / limit) + 20;
