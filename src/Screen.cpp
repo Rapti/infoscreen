@@ -9,6 +9,7 @@
 #include "ModuleCpu.h"
 #include "ModuleDatausage.h"
 #include "ModulePing.h"
+#include "ModulePublicTransitStop.h"
 
 
 Screen* Screen::singleton;
@@ -56,6 +57,7 @@ void Screen::run() {
     g->addModule(new ModuleCpu("gaming-pc"), 2, 1, 1, 1);
     g->addModule(new ModuleTime(), 0, 2, 1, 1);
     g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "einspluseins", "server.raptilic.us"}, {"Bluelou", "PC", "Telefon", "Kimsufi"}), 1, 2, 1, 1);
+    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 2, 2, 1, 3);
 
 
     std::cout << "All Modules added" << std::endl;
