@@ -11,6 +11,6 @@
 #include <SFML/Window.hpp>
 #include "Screen.h"
 
-
+std::string exec(const char* cmd);
 
 #endif //INFOSCREEN_MAIN_H

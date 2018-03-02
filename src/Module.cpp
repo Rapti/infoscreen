@@ -30,9 +30,9 @@ float Module::getDisplayHeight() {
 bool Module::drawBackground() {return true;}
 
 sf::RenderTexture* Module::render() {
-    t->display();
     t->clear(sf::Color::Transparent);
     draw();
+    t->display();
     return t;
 }
 
