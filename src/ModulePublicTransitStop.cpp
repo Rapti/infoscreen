@@ -178,11 +178,16 @@ void ModulePublicTransitStop::refreshLoop() {
 			ss << " ";
 			ss << (*i)["sched_time"].GetString();
 			ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
+			std::cout << ss.str() << std::endl;
 			time_t time = mktime(&tm);
 			t->setDeparture(time);
 
-			if(!(*i)["delay"].IsNull())
-				t->setDelay(atoi((*i)["delay"].GetString()));
+			if(!(*i)["delay"].IsNull()) {
+				if((*i)["delay"].IsString())
+					t->setDelay(atoi((*i)["delay"].GetString()));
+				else t->setDelay((*i)["delay"].GetInt());
+			}
+
 //			std::cout << asctime(localtime(&time)) << std::endl;
 			trains.push_back(t);
 		}
