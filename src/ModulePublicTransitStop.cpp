@@ -77,7 +77,7 @@ void ModulePublicTransitStop::draw() {
 			text.setString("fällt aus");
 			text.setFillColor(sf::Color::Red);
 		} else {
-			int minutes = ceil(difftime(time, now) / 60);
+			int minutes = ceil(difftime(time, now) / 60) + (*i)->getDelay();
 			if(minutes == 0)
 				text.setString("jetzt");
 			else {
