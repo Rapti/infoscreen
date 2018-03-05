@@ -105,7 +105,7 @@ void ModulePublicTransitStop::draw() {
 
 		y = rs.getPosition().y + 3;
 
-		if(y > getDisplayWidth())
+		if(y > getDisplayHeight())
 			break;
 	}
 	mutex->unlock();
