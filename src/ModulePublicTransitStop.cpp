@@ -172,14 +172,18 @@ void ModulePublicTransitStop::refreshLoop() {
 			t->setName((*i)["line"].GetString());
 			t->setDestination((*i)["destination"].GetString());
 
+			std::cout << (*i)["line"].GetString() << " " << (*i)["destination"].GetString() << std::endl;
 			struct std::tm tm;
 			std::stringstream ss;
+			ss.str("");
 			ss << (*i)["sched_date"].GetString();
 			ss << " ";
 			ss << (*i)["sched_time"].GetString();
+			mktime(&tm);
 			ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
-			std::cout << ss.str() << std::endl;
 			time_t time = mktime(&tm);
+			std::cout << ss.str() << std::endl;
+			std::cout << asctime(localtime(&time)) << std::endl;
 			t->setDeparture(time);
 
 			if(!(*i)["delay"].IsNull()) {
@@ -187,8 +191,6 @@ void ModulePublicTransitStop::refreshLoop() {
 					t->setDelay(atoi((*i)["delay"].GetString()));
 				else t->setDelay((*i)["delay"].GetInt());
 			}
-
-//			std::cout << asctime(localtime(&time)) << std::endl;
 			trains.push_back(t);
 		}
 		mutex->unlock();
