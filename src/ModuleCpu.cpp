@@ -82,7 +82,7 @@ void ModuleCpu::draw() {
 		if(displayvalue != -1) {
 			int padding = 10;
 			sf::Text text;
-			text.setFont(f);
+			text.setFont(monospace);
 			text.setFillColor(sf::Color(255, 255, 255, 128));
 
 			text.setString("100 %");

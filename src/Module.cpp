@@ -5,6 +5,10 @@
 #include "Module.h"
 #include "Screen.h"
 
+std::mutex Module::fontmutex;
+sf::Font Module::monospace;
+sf::Font Module::natural;
+
 Module::Module() {
     t = new sf::RenderTexture;
 //    sf::ContextSettings settings;
@@ -12,7 +16,10 @@ Module::Module() {
 
     t->setSmooth(true);
     t->display();
-    f.loadFromFile("res/fonts/DroidSansMono.ttf");
+	if(fontmutex.try_lock()) {
+		monospace.loadFromFile("res/fonts/DroidSansMono.ttf");
+		natural.loadFromFile("/usr/share/fonts/WindowsFonts/arial.ttf");
+	}
 }
 
 Module::~Module() {

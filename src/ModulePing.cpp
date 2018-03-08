@@ -60,7 +60,7 @@ void ModulePing::draw() {
 	const float ypadding = 0.1;
 	const int padding = 5;
 	sf::Text text;
-	text.setFont(f);
+	text.setFont(monospace);
 	text.setCharacterSize(testSize);
 	maxh = testSize;
 

@@ -145,7 +145,7 @@ void ModuleDatausage::draw() {
 
 
         sf::Text text;
-        text.setFont(f);
+        text.setFont(monospace);
         if(download + upload >= limit) {
             text.setString("rip");
         } else {

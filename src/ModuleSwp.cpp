@@ -51,7 +51,7 @@ void ModuleSwp::draw() {
 
 		int padding = 10;
 		sf::Text text;
-		text.setFont(f);
+		text.setFont(monospace);
 		text.setFillColor(sf::Color(255, 255, 255, 128));
 
 		text.setString("000.00 GB");

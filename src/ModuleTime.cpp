@@ -31,7 +31,7 @@ ModuleTime::~ModuleTime() {
 
 void ModuleTime::draw() {
     sf::Text text;
-    text.setFont(f);
+    text.setFont(monospace);
     time_t timet;
     std::time(&timet);
     if(initialsecs == 0)

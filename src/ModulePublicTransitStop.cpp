@@ -30,7 +30,7 @@ void ModulePublicTransitStop::draw() {
 	const float ypadding = 0.1;
 	const int padding = 5;
 	sf::Text text;
-	text.setFont(f);
+	text.setFont(natural);
 	text.setCharacterSize(testSize);
 	text.setString("HB1 Dortmund Eichlinghofen H-Bahn");
 	float tw = text.getLocalBounds().width;

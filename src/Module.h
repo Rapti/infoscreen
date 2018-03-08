@@ -6,6 +6,7 @@
 #define INFOSCREEN_MODULE_H
 
 #include <SFML/Graphics.hpp>
+#include <mutex>
 #include "Grid.h"
 
 class Grid;
@@ -49,9 +50,10 @@ protected:
     int x, y, w, h;
     virtual void draw() = 0;
     int initialsecs = 0;
-    sf::Font f;
-    bool drawBg = true;
-    Grid* grid;
+    static sf::Font monospace;
+	static sf::Font natural;
+	static std::mutex fontmutex;
+	Grid* grid;
 };
 
 
