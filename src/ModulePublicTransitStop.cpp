@@ -188,6 +188,7 @@ void ModulePublicTransitStop::refreshLoop() {
 			ss << (*i)["sched_time"].GetString();
 			mktime(&tm);
 			ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
+			tm.tm_sec = 0;
 			time_t time = mktime(&tm);
 //			std::cout << ss.str() << std::endl;
 //			std::cout << asctime(localtime(&time)) << std::endl;
