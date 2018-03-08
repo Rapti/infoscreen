@@ -5,6 +5,7 @@
 #include <sstream>
 #include "ModulePing.h"
 #include <cmath>
+#include <cstring>
 
 ModulePing::ModulePing(std::vector<std::string> hosts): ModulePing(hosts, hosts) {}
 
@@ -115,7 +116,9 @@ Host::~Host() {}
 
 void Host::ping() {
 //	std::cout << "Refreshing " << getName() << std::endl;
-	up = system(("ping -c1 " + hostname).c_str()) == 0;
+	const char* cmd = ("ping -qc1" + hostname).c_str();
+//	strcat(cmd, "> /dev/null");
+	up = system(cmd) == 0;
 //	std::cout << getName() << " is " << (up? "up":"down") << std::endl;
 }
 
