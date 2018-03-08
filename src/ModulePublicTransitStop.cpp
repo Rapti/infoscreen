@@ -147,7 +147,7 @@ void ModulePublicTransitStop::refreshLoop() {
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunction);
 
 		CURLcode res = curl_easy_perform(curl);
-		std::cout << "curlcode: " << res << std::endl;
+//		std::cout << "curlcode: " << res << std::endl;
 
 
 		if(res != CURLE_OK) {
@@ -157,7 +157,7 @@ void ModulePublicTransitStop::refreshLoop() {
 
 		curl_easy_cleanup(curl);
 
-		std::cout << "result: " << result << std::endl;
+//		std::cout << "result: " << result << std::endl;
 		rapidjson::Document data;
 		data.Parse(result.c_str());
 		mutex->lock();
@@ -189,8 +189,8 @@ void ModulePublicTransitStop::refreshLoop() {
 			mktime(&tm);
 			ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
 			time_t time = mktime(&tm);
-			std::cout << ss.str() << std::endl;
-			std::cout << asctime(localtime(&time)) << std::endl;
+//			std::cout << ss.str() << std::endl;
+//			std::cout << asctime(localtime(&time)) << std::endl;
 			t->setDeparture(time);
 
 			if(!(*i)["delay"].IsNull()) {
