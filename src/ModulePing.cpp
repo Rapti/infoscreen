@@ -36,7 +36,7 @@ ModulePing::~ModulePing() {
 
 void ModulePing::refreshLoop() {
 	while(active) {
-		std::cout << "Refreshing Pings" << std::endl;
+//		std::cout << "Refreshing Pings" << std::endl;
 		mutex->lock();
 		for (Host* h: hosts) {
 			std::thread(&Host::ping, std::ref(*h)).detach();
@@ -114,9 +114,9 @@ Host::Host(std::string hostname, std::string alias): hostname(hostname), alias(a
 Host::~Host() {}
 
 void Host::ping() {
-	std::cout << "Refreshing " << getName() << std::endl;
+//	std::cout << "Refreshing " << getName() << std::endl;
 	up = system(("ping -c1 " + hostname).c_str()) == 0;
-	std::cout << getName() << " is " << (up? "up":"down") << std::endl;
+//	std::cout << getName() << " is " << (up? "up":"down") << std::endl;
 }
 
 const std::string Host::getName() const {
