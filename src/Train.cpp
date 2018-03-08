@@ -47,11 +47,11 @@ void Train::setName(const std::string &name) {
 	Train::name = name;
 }
 
-const std::string &Train::getDestination() const {
+std::wstring Train::getDestination() const {
 	return destination;
 }
 
-void Train::setDestination(const std::string &destination) {
+void Train::setDestination(std::wstring destination) {
 	Train::destination = destination;
 }
 

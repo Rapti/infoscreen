@@ -23,8 +23,8 @@ public:
 	void setPlatform(const std::string &platform);
 	const std::string &getName() const;
 	void setName(const std::string &name);
-	const std::string &getDestination() const;
-	void setDestination(const std::string &destination);
+	std::wstring getDestination() const;
+	void setDestination(std::wstring destination);
 	bool isCancelled();
 	bool isDelayed();
 
@@ -35,7 +35,7 @@ private:
 	int delay;
 	std::string platform;
 	std::string name;
-	std::string destination;
+	std::wstring destination;
 	sf::RenderTexture t;
 	bool cancelled;
 };

@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 #include <iomanip>
 #include <cmath>
+#include <codecvt>
 
 ModulePublicTransitStop::ModulePublicTransitStop(const std::string &city, const std::string &stop): Module() {
     this->city = city;
@@ -52,6 +53,7 @@ void ModulePublicTransitStop::draw() {
 		text.setFillColor(sf::Color(255, 255, 255, 160));
 		text.setPosition(padding + text.getGlobalBounds().width, text.getPosition().y);
 		text.setString((*i)->getDestination());
+//		text.setString(L"Teßt");
 		t->draw(text);
 
 		text.setFillColor(sf::Color::White);
@@ -155,24 +157,29 @@ void ModulePublicTransitStop::refreshLoop() {
 
 		curl_easy_cleanup(curl);
 
-//		mutex->lock();
-//		std::cout << "result: " << result << std::endl;
+		std::cout << "result: " << result << std::endl;
 		rapidjson::Document data;
 		data.Parse(result.c_str());
-//		std::cout << data["preformatted"][0][1].GetString() << std::endl;
 		mutex->lock();
-
 		while(!trains.empty()) {
 			delete trains.front();
 			trains.pop_front();
 		}
+//		std::cout << "result: " << data. << std::endl;
 
 		for(rapidjson::Value::ValueIterator i =  data["raw"].Begin(); i != data["raw"].End(); ++i) {
 			Train* t = new Train();
 			t->setName((*i)["line"].GetString());
-			t->setDestination((*i)["destination"].GetString());
+//			std::string str("Teßt");
+			std::string str((*i)["destination"].GetString());
 
-			std::cout << (*i)["line"].GetString() << " " << (*i)["destination"].GetString() << std::endl;
+
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			std::wstring wide = converter.from_bytes(str);
+
+			t->setDestination(wide);
+
+//			std::cout << (*i)["line"].GetString() << " " << (*i)["destination"].GetString() << std::endl;
 			struct std::tm tm;
 			std::stringstream ss;
 			ss.str("");
@@ -194,7 +201,7 @@ void ModulePublicTransitStop::refreshLoop() {
 			trains.push_back(t);
 		}
 		mutex->unlock();
-//		active = false;
+
 		int d = 30000 - clock.getElapsedTime().asMilliseconds();
 		if (d > 0)
 			std::this_thread::sleep_for(std::chrono::milliseconds(d));
