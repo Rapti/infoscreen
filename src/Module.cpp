@@ -44,7 +44,7 @@ sf::RenderTexture* Module::render() {
 }
 
 void Module::updateDisplaySize() {
-    std::cout << "Updating Module display size to " << getDisplayWidth() << "x" << getDisplayHeight() << std::endl;
+//    std::cout << "Updating Module display size to " << getDisplayWidth() << "x" << getDisplayHeight() << std::endl;
     t->create(getDisplayWidth(), getDisplayHeight());
 }
 

@@ -33,9 +33,7 @@ Screen::Screen() {
     bg->loadFromFile("/home/leon/ClionProjects/Infoscreen/res/images/Amazing-night-sky-blurred.jpg");
     bgs = new sf::Sprite;
     bgs->setTexture(*bg);
-    std::cout << "About to create Grid" << std::endl;
     g = new Grid(3, 5);
-    std::cout << "Grid created" << std::endl;
 
 }
 Screen::~Screen() {
@@ -60,7 +58,7 @@ void Screen::run() {
     g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 2, 1, 1, 4);
 
 
-    std::cout << "All Modules added" << std::endl;
+    std::cout << "Startup finished" << std::endl;
     renderLoop();
 }
 

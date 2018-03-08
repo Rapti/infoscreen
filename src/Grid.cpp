@@ -41,7 +41,7 @@ float Grid::getDisplayHeight() {
 }
 
 void Grid::updateDisplaySize(int w, int h) {
-    std::cout << "Updating Grid display size to " << w << "x" << h << std::endl;
+//    std::cout << "Updating Grid display size to " << w << "x" << h << std::endl;
     displayWidth = w;
     displayHeight = h;
     for(Module* m: modules) {
