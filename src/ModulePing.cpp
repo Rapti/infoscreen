@@ -116,9 +116,7 @@ Host::~Host() {}
 
 void Host::ping() {
 //	std::cout << "Refreshing " << getName() << std::endl;
-	const char* cmd = ("ping -qc1" + hostname).c_str();
-//	strcat(cmd, "> /dev/null");
-	up = system(cmd) == 0;
+	up = system(("ping -qc1 " + hostname + " > /dev/null").c_str()) == 0;
 //	std::cout << getName() << " is " << (up? "up":"down") << std::endl;
 }
 
