@@ -6,8 +6,24 @@
 #define INFOSCREEN_MODULETIMER_H
 
 
-class ModuleTimer {
+#include <ctime>
+#include <SFML/System/Clock.hpp>
+#include "Module.h"
 
+class ModuleTimer: public Module {
+private:
+	struct tm target;
+	sf::Clock c;
+	sf::Clock lastInput;
+	int n = 0;
+	void updateTarget();
+
+public:
+	ModuleTimer();
+	virtual ~ModuleTimer();
+	void draw();
+	void reset();
+	void add(unsigned int);
 };
 
 

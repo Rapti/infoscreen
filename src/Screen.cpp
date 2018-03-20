@@ -4,6 +4,7 @@
 
 #include "Screen.h"
 #include "ModuleTime.h"
+#include "ModuleTimer.h"
 #include "ModuleRam.h"
 #include "ModuleSwp.h"
 #include "ModuleCpu.h"
@@ -54,6 +55,7 @@ void Screen::run() {
     g->addModule(new ModuleSwp("gaming-pc"), 0, 2, 1, 1);
     g->addModule(new ModuleCpu("gaming-pc"), 0, 3, 1, 1);
     g->addModule(new ModuleTime(), 0, 4, 1, 1);
+    g->addModule(new ModuleTimer(), 1, 4, 1, 1);
     g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "einspluseins", "server.raptilic.us"}, {"Bluelou", "PC", "Telefon", "Kimsufi"}), 1, 1, 1, 1);
     g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 2, 1, 1, 4);
 
@@ -89,6 +91,9 @@ void Screen::renderLoop() {
                 window->setView(view);
                 updateSize();
             }
+			if(event.type == sf::Event::KeyPressed) {
+
+			}
         }
 
         window->clear(sf::Color::Blue);
