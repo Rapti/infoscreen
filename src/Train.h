@@ -19,6 +19,7 @@ public:
 	void setDeparture(time_t departure);
 	int getDelay() const;
 	void setDelay(int delay);
+	void setCancelled(bool);
 	const std::string &getPlatform() const;
 	void setPlatform(const std::string &platform);
 	const std::string &getName() const;

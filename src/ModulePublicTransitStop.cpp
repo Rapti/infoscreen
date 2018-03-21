@@ -76,7 +76,7 @@ void ModulePublicTransitStop::draw() {
 		}
 
 		if((*i)->isCancelled()) {
-			text.setString("fällt aus");
+			text.setString(L"fällt aus");
 			text.setFillColor(sf::Color::Red);
 		} else {
 			int minutes = ceil(difftime(time, now) / 60) + (*i)->getDelay();
@@ -198,6 +198,13 @@ void ModulePublicTransitStop::refreshLoop() {
 				if((*i)["delay"].IsString())
 					t->setDelay(atoi((*i)["delay"].GetString()));
 				else t->setDelay((*i)["delay"].GetInt());
+			}
+			if(!(*i)["is_cancelled"].IsNull()) {
+				if((*i)["is_cancelled"].IsString())
+					t->setCancelled(atoi((*i)["is_cancelled"].GetString()) == 1);
+				else if((*i)["is_cancelled"].IsInt())
+					t->setCancelled((*i)["is_cancelled"].GetInt() == 1);
+				else t->setCancelled((*i)["is_cancelled"].GetBool());
 			}
 			trains.push_back(t);
 		}

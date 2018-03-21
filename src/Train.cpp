@@ -90,3 +90,7 @@ bool Train::isDelayed() {
 bool Train::isCancelled() {
 	return cancelled;
 }
+
+void Train::setCancelled(bool c) {
+	cancelled = c;
+}
