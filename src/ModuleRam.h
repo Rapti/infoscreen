@@ -9,9 +9,9 @@
 
 class ModuleRam: public ModuleSystemusage {
 public:
-    ModuleRam(std::string);
-    virtual ~ModuleRam();
-    void draw();
+	explicit ModuleRam(std::string);
+	~ModuleRam() override;
+    void draw() override;
 
 };
 

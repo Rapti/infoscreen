@@ -14,11 +14,6 @@ ModuleSwp::~ModuleSwp() {
 }
 
 void ModuleSwp::draw() {
-	int xoffset = 0;
-	int yoffset = 0;
-	float tlheight = getDisplayHeight() - 1.5*yoffset;
-	float tlwidth = getDisplayWidth() - 2*xoffset;
-
 	mutex->lock();
 	if (!snapshots->empty()) {
 		SystemusageSnapshot* last;
@@ -40,14 +35,12 @@ void ModuleSwp::draw() {
 					++i;
 					break;
 				}
-
 			}
 			if(points.size() > 1)
 				ModuleSystemusage::draw(points);
 			for(sf::Vector2f* v: points) delete v;
 			points.clear();
 		}
-
 
 		int padding = 10;
 		sf::Text text;

@@ -9,9 +9,9 @@
 
 class ModuleSwp: public ModuleSystemusage {
 public:
-    ModuleSwp(std::string);
-    virtual ~ModuleSwp();
-    void draw();
+	explicit ModuleSwp(std::string);
+	~ModuleSwp() override;
+    void draw() override;
 private:
 
 };

@@ -12,9 +12,6 @@ public:
     ModuleCpu(std::string);
     virtual ~ModuleCpu();
     void draw();
-private:
-    int normalizationTime = 2000;
-    int* normalizationValues;
 };
 
 

@@ -5,16 +5,10 @@
 #include <sstream>
 #include <iomanip>
 #include "ModuleCpu.h"
-#include "Screen.h"
 
 ModuleCpu::ModuleCpu(std::string host) : ModuleSystemusage(host) {
-    normalizationValues = new int[normalizationTime / updateInterval];
 }
-
-
-ModuleCpu::~ModuleCpu() {
-    delete normalizationValues;
-}
+ModuleCpu::~ModuleCpu() = default;
 
 void ModuleCpu::draw() {
 
@@ -26,9 +20,9 @@ void ModuleCpu::draw() {
 
 	mutex->lock();
 	if (!snapshots->empty()) {
-		SystemusageSnapshot* last;
+		SystemusageSnapshot* last = nullptr;
 		double displayvalue = -1;
-		for (std::list<SystemusageSnapshot*>::iterator i = ++snapshots->begin(); i != snapshots->end();) {
+		for (auto i = ++snapshots->begin(); i != snapshots->end();) {
 			std::list<sf::Vector2f*> points;
 			for (; i != snapshots->end();) {
 				if (*i) {
@@ -46,7 +40,6 @@ void ModuleCpu::draw() {
 							if (((*i)->getAge() - s->getAge()).asSeconds() > normalisationSeconds) {
 								break;
 							}
-
 						}
 						s = *i;
 						while (j-- > 0) ++i;
@@ -65,19 +58,16 @@ void ModuleCpu::draw() {
 						last = nullptr;
 						break;
 					}
-//					++i;
 				} else {
 					++i;
 					break;
 				}
-
 			}
 			if (points.size() > 1)
 				ModuleSystemusage::draw(points);
 			for (sf::Vector2f* v: points) delete v;
 			points.clear();
 		}
-
 
 		if(displayvalue != -1) {
 			int padding = 10;
@@ -99,10 +89,7 @@ void ModuleCpu::draw() {
 			text.setString(ss.str());
 			text.setPosition(0, padding - 6 - (80 * scale * 0.18));
 			t->draw(text);
-		} else
-			std::cout << "rip" << std::endl;
+		}
 	}
-
-
 	mutex->unlock();
 }
