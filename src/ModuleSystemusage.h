@@ -15,8 +15,8 @@ class SystemusageSnapshot;
 class ModuleSystemusage: public Module {
 
 public:
-    ModuleSystemusage(std::string host);
-    virtual ~ModuleSystemusage();
+	explicit ModuleSystemusage(std::string host);
+	~ModuleSystemusage() override;
 protected:
     static std::unordered_map<std::string, std::list<ModuleSystemusage*>*> map;
     std::string host;
@@ -27,10 +27,10 @@ protected:
     sf::Color linecolor = sf::Color::White;
     sf::RectangleShape line;
     std::mutex* mutex;
-    virtual void draw();
+	void draw() override;
 	void draw(std::list<sf::Vector2f*>);
 
-	std::__cxx11::string bytesToHumanReadableFormat(const long bytes) const;
+	std::__cxx11::string bytesToHumanReadableFormat(long bytes) const;
 
 private:
     void refreshLoop();

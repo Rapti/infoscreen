@@ -5,13 +5,8 @@
 #include <sstream>
 #include "ModuleRam.h"
 
-ModuleRam::ModuleRam(std::string host) : ModuleSystemusage(host) {
-
-}
-
-ModuleRam::~ModuleRam() {
-
-}
+ModuleRam::ModuleRam(std::string host) : ModuleSystemusage(host) {}
+ModuleRam::~ModuleRam() = default;
 
 void ModuleRam::draw() {
     int xoffset = 0;
@@ -22,7 +17,7 @@ void ModuleRam::draw() {
     mutex->lock();
     if (!snapshots->empty()) {
 		SystemusageSnapshot* last;
-		for(std::list<SystemusageSnapshot*>::iterator i = snapshots->begin(); i != snapshots->end();) {
+		for(auto i = snapshots->begin(); i != snapshots->end();) {
 			std::list<sf::Vector2f*> points;
 			for(; i != snapshots->end();) {
 				if(*i) {
@@ -40,7 +35,6 @@ void ModuleRam::draw() {
 					++i;
 					break;
 				}
-
 			}
 			if(points.size() > 1)
 				ModuleSystemusage::draw(points);
@@ -71,7 +65,6 @@ void ModuleRam::draw() {
 		ss.str(std::string());
 		ss << bytesToHumanReadableFormat(snapshots->back()->getTotalmem());
 		mutex->unlock();
-
 
 		text.setString(ss.str());
 		textrect = text.getLocalBounds();
