@@ -9,8 +9,9 @@
 #include <ctime>
 #include <SFML/System/Clock.hpp>
 #include "Module.h"
+#include "EventListener.h"
 
-class ModuleTimer: public Module {
+class ModuleTimer: public Module, public EventListener {
 private:
 	struct tm target;
 	sf::Clock c;
@@ -18,12 +19,17 @@ private:
 	int n = 0;
 	void updateTarget();
 
+protected:
+	void onEvent(sf::Event) override;
+
 public:
 	ModuleTimer();
-	virtual ~ModuleTimer();
-	void draw();
+	~ModuleTimer() override;
+	void draw() override;
 	void reset();
-	void add(unsigned int);
+	void add(int);
+	void addMinute();
+	void removeMinute();
 };
 
 
