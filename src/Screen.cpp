@@ -51,13 +51,13 @@ sf::RenderWindow* Screen::getWindow() {
 
 void Screen::run() {
     g->addModule(new ModuleDatausage(), 0, 0, 3, 1);
-    g->addModule(new ModuleRam("gaming-pc"), 0, 1, 1, 1);
-    g->addModule(new ModuleSwp("gaming-pc"), 0, 2, 1, 1);
-    g->addModule(new ModuleCpu("gaming-pc"), 0, 3, 1, 1);
-    g->addModule(new ModuleTime(), 0, 4, 1, 1);
+    g->addModule(new ModuleRam("gaming-pc"), 1, 1, 1, 1);
+    g->addModule(new ModuleSwp("gaming-pc"), 1, 2, 1, 1);
+    g->addModule(new ModuleCpu("gaming-pc"), 1, 3, 1, 1);
+    g->addModule(new ModuleTime(), 2, 1, 1, 1);
     g->addModule(new ModuleTimer(), 1, 4, 1, 1);
-    g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "einspluseins", "server.raptilic.us"}, {"Bluelou", "PC", "Telefon", "Kimsufi"}), 1, 1, 1, 1);
-    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 2, 1, 1, 4);
+    g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "192.168.178.94", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 2, 2, 1, 1);
+    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 0, 1, 1, 4);
 
 
     std::cout << "Startup finished" << std::endl;
