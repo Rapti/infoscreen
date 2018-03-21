@@ -4,6 +4,7 @@
 
 #include "Screen.h"
 #include "ModuleTime.h"
+#include "ModuleTimer.h"
 #include "ModuleRam.h"
 #include "ModuleSwp.h"
 #include "ModuleCpu.h"
@@ -50,12 +51,13 @@ sf::RenderWindow* Screen::getWindow() {
 
 void Screen::run() {
     g->addModule(new ModuleDatausage(), 0, 0, 3, 1);
-    g->addModule(new ModuleRam("gaming-pc"), 0, 1, 1, 1);
-    g->addModule(new ModuleSwp("gaming-pc"), 0, 2, 1, 1);
-    g->addModule(new ModuleCpu("gaming-pc"), 0, 3, 1, 1);
-    g->addModule(new ModuleTime(), 0, 4, 1, 1);
-    g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "einspluseins", "server.raptilic.us"}, {"Bluelou", "PC", "Telefon", "Kimsufi"}), 1, 1, 1, 1);
-    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 2, 1, 1, 4);
+    g->addModule(new ModuleRam("gaming-pc"), 1, 1, 1, 1);
+    g->addModule(new ModuleSwp("gaming-pc"), 1, 2, 1, 1);
+    g->addModule(new ModuleCpu("gaming-pc"), 1, 3, 1, 1);
+    g->addModule(new ModuleTime(), 2, 1, 1, 1);
+    g->addModule(new ModuleTimer(), 1, 4, 1, 1);
+    g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "192.168.178.94", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 2, 2, 1, 1);
+    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 0, 1, 1, 4);
 
 
     std::cout << "Startup finished" << std::endl;
@@ -78,7 +80,7 @@ void Screen::renderLoop() {
     while (window->isOpen()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event;
+        sf::Event event{};
         while (window->pollEvent(event)) {
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
@@ -89,6 +91,11 @@ void Screen::renderLoop() {
                 window->setView(view);
                 updateSize();
             }
+
+
+			for(auto i = listeners.begin(); i != listeners.end(); ++i) {
+				(*i)->onEvent(event);
+			}
         }
 
         window->clear(sf::Color::Blue);
@@ -98,4 +105,16 @@ void Screen::renderLoop() {
 
         window->display();
     }
+}
+
+void Screen::addEventListener(EventListener* e) {
+	listeners.push_back(e);
+}
+void Screen::removeEventListener(EventListener* e) {
+	for(std::vector<EventListener*>::iterator i = listeners.begin(); i != listeners.end(); ) {
+		if(*i == e) {
+			listeners.erase(i);
+		} else
+			++i;
+	}
 }

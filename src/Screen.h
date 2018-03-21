@@ -11,6 +11,7 @@
 #include <iostream>
 #include <list>
 #include "Module.h"
+#include "EventListener.h"
 
 
 class Screen {
@@ -19,16 +20,20 @@ private:
     sf::Texture* bg;
     sf::Sprite* bgs;
     Grid* g;
+	std::vector<EventListener*> listeners;
 public:
     Screen();
     virtual ~Screen();
     void run();
     void updateSize();
     sf::RenderWindow* getWindow();
+	void addEventListener(EventListener*);
 
     static Screen* singleton;
     sf::View view;
     sf::RenderWindow* window;
+
+	void removeEventListener(EventListener* e);
 };
 
 
