@@ -78,7 +78,7 @@ void Screen::renderLoop() {
     while (window->isOpen()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event;
+        sf::Event event{};
         while (window->pollEvent(event)) {
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
@@ -89,6 +89,10 @@ void Screen::renderLoop() {
                 window->setView(view);
                 updateSize();
             }
+
+			for(auto i = listeners.begin(); i != listeners.end(); ++i) {
+				(*i)->onEvent(event);
+			}
         }
 
         window->clear(sf::Color::Blue);
@@ -98,4 +102,16 @@ void Screen::renderLoop() {
 
         window->display();
     }
+}
+
+void Screen::addEventListener(EventListener* e) {
+	listeners.push_back(e);
+}
+void Screen::removeEventListener(EventListener* e) {
+	for(std::vector<EventListener*>::iterator i = listeners.begin(); i != listeners.end(); ) {
+		if(*i == e) {
+			listeners.erase(i);
+		} else
+			++i;
+	}
 }
