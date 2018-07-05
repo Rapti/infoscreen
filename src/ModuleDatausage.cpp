@@ -37,7 +37,7 @@ ModuleDatausage::~ModuleDatausage() {
 
 void ModuleDatausage::refreshLoop() {
     sf::Clock clock;
-    std::string str = "curl -s 10.4.11.1/traffic.php | head -n1";
+    std::string str = "curl -s 10.4.11.1/traffic.php";
     const char *cmd = str.c_str();
     while (active) {
         std::string result = exec(cmd);
@@ -80,13 +80,14 @@ int ModuleDatausage::extractint(std::string s, std::regex e) {
 
 std::string ModuleDatausage::extractstring(std::string s, std::regex e) {
     std::smatch m;
-    if (std::regex_search (s, m, e)) {
+    if (std::regex_search(s, m, e)) {
         int i = 0;
         for (std::string x:m) {
             if (i++ == 0) continue;
             return x;
         }
     }
+    return "";
 }
 
 void ModuleDatausage::draw() {
@@ -125,11 +126,11 @@ void ModuleDatausage::draw() {
         t->draw(line);
 
 
-        int timediffsecs;
-        if(total > limit)
-            timediffsecs = weekprogress - (week);
-        else
-            timediffsecs = weekprogress - (week * total / limit);
+//        int timediffsecs;
+//        if(total > limit)
+//            timediffsecs = weekprogress - (week);
+//        else
+//            timediffsecs = weekprogress - (week * total / limit);
 
 
         weekprogress *= tlwidth / week;
