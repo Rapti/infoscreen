@@ -11,11 +11,7 @@ sf::Font Module::natural;
 
 Module::Module() {
     t = new sf::RenderTexture;
-//    sf::ContextSettings settings;
-//    settings.antialiasingLevel = 8;
-
     t->setSmooth(true);
-    t->display();
 	if(fontmutex.try_lock()) {
 		monospace.loadFromFile("res/fonts/DroidSansMono.ttf");
 		natural.loadFromFile("/usr/share/fonts/WindowsFonts/arial.ttf");
@@ -44,7 +40,6 @@ sf::RenderTexture* Module::render() {
 }
 
 void Module::updateDisplaySize() {
-//    std::cout << "Updating Module display size to " << getDisplayWidth() << "x" << getDisplayHeight() << std::endl;
     t->create(getDisplayWidth(), getDisplayHeight());
 }
 
