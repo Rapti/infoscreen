@@ -16,7 +16,7 @@ ModuleSwp::~ModuleSwp() {
 void ModuleSwp::draw() {
 	mutex->lock();
 	if (!snapshots->empty()) {
-		SystemusageSnapshot* last;
+		SystemusageSnapshot* last = nullptr;
 		for(std::list<SystemusageSnapshot*>::iterator i = snapshots->begin(); i != snapshots->end();) {
 			std::list<sf::Vector2f*> points;
 			for(; i != snapshots->end();) {

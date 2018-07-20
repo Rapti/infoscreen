@@ -198,9 +198,7 @@ SystemusageSnapshot::SystemusageSnapshot(sf::Clock c,
 		swp(swp), totalswp(totalswp) {
 }
 
-SystemusageSnapshot::~SystemusageSnapshot() {
-
-}
+SystemusageSnapshot::~SystemusageSnapshot() = default;
 
 sf::Time SystemusageSnapshot::getAge() {
 	return c.getElapsedTime();

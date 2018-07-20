@@ -16,11 +16,11 @@ void ModuleRam::draw() {
 
     mutex->lock();
     if (!snapshots->empty()) {
-		SystemusageSnapshot* last;
+		SystemusageSnapshot* last = nullptr;
 		for(auto i = snapshots->begin(); i != snapshots->end();) {
 			std::list<sf::Vector2f*> points;
 			for(; i != snapshots->end();) {
-				if(*i) {
+				if(*i && *i != nullptr) {
 					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < 3) {
 						points.push_back(new sf::Vector2f((1 - (*i)->getAge().asSeconds() / 180.0) * getDisplayWidth(),
 														  (1 - (float) (*i)->getMem() / (*i)->getTotalmem()) *
