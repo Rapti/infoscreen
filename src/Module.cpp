@@ -13,7 +13,7 @@ Module::Module() {
     t = new sf::RenderTexture;
     t->setSmooth(true);
 	if(fontmutex.try_lock()) {
-		monospace.loadFromFile("res/fonts/DroidSansMono.ttf");
+		monospace.loadFromFile("/usr/share/fonts/DroidSansMono.ttf");
 		natural.loadFromFile("/usr/share/fonts/WindowsFonts/arial.ttf");
 	}
 }

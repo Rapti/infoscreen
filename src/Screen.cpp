@@ -31,7 +31,7 @@ Screen::Screen() {
     bg = new sf::Texture;
 
 //    bg->loadFromFile("/home/leon/ClionProjects/Infoscreen/res/images/nature-trees-blur-blurred.jpg");
-    bg->loadFromFile("/home/leon/ClionProjects/Infoscreen/res/images/Amazing-night-sky-blurred.jpg");
+    bg->loadFromFile("/usr/share/images/Amazing-night-sky-blurred.jpg");
     bgs = new sf::Sprite;
     bgs->setTexture(*bg);
     g = new Grid(3, 5);
@@ -77,6 +77,7 @@ void Screen::updateSize() {
 
 void Screen::renderLoop() {
     updateSize();
+    sf::Color bgc(0,0,128);
     while (window->isOpen()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // check all the window's events that were triggered since the last iteration of the loop
@@ -93,12 +94,12 @@ void Screen::renderLoop() {
             }
 
 
-			for(auto i = listeners.begin(); i != listeners.end(); ++i) {
-				(*i)->onEvent(event);
+			for (auto &listener : listeners) {
+				listener->onEvent(event);
 			}
         }
 
-        window->clear(sf::Color::Blue);
+        window->clear(bgc);
         window->draw(*bgs);
 
         g->drawTo(window);
