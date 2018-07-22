@@ -13,10 +13,6 @@ ModuleCpu::~ModuleCpu() = default;
 void ModuleCpu::draw() {
 
 	const float normalisationSeconds = 2;
-    int xoffset = 0;
-    int yoffset = 0;
-    float tlheight = getDisplayHeight() - 1.5*yoffset;
-    float tlwidth = getDisplayWidth() - 2*xoffset;
 
 	mutex->lock();
 	if (!snapshots->empty()) {
@@ -81,13 +77,13 @@ void ModuleCpu::draw() {
 			float scaleX = (getDisplayWidth() - 2 * padding) / textrect.width;
 			float scaleY = (getDisplayHeight() - 2 * padding) / (textrect.height);
 			float scale = std::min(scaleX, scaleY);
-			text.setCharacterSize(80 * scale);
+			text.setCharacterSize((unsigned int) (80 * scale));
 
 			std::stringstream ss;
 			ss << std::setw(3) << std::setfill(' ') << (int) (displayvalue * 100) << " %";
 			mutex->unlock();
 			text.setString(ss.str());
-			text.setPosition(0, padding - 6 - (80 * scale * 0.18));
+			text.setPosition(0, padding - 6 - (80 * scale * 0.18F));
 			t->draw(text);
 		}
 	}

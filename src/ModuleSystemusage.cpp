@@ -4,7 +4,7 @@
 
 #include "ModuleRam.h"
 #include <sstream>
-#include <math.h>
+#include <cmath>
 #include <iomanip>
 
 
@@ -146,17 +146,17 @@ std::string ModuleSystemusage::exec(const char* cmd) {
 std::__cxx11::string ModuleSystemusage::bytesToHumanReadableFormat(const long bytes) const {
 	std::stringstream ss;
 	if(bytes > 1024 * 1024 * 1024) {
-		ss << 100 * bytes / (1024 * 1024 * 1024) / 100.0;
+		ss << 100 * bytes / (1024 * 1024 * 1024) / 100F;
 		ss << " GB";
 	} else if(bytes > 1024 * 1024) {
-		ss  << 100 * bytes / (1024 * 1024) / 100.0;
+		ss  << 100 * bytes / (1024 * 1024) / 100F;
 		ss << " MB";
 	} else if(bytes > 1024) {
-		ss << 100 * bytes / 1024 / 100.0;
+		ss << 100 * bytes / 1024 / 100F;
 		ss << " KB";
 	} else {
 		ss << std::setw(6) << std::setfill(' ') << bytes;
-		ss << "  B";
+		ss << " B";
 	}
 	return ss.str();
 }
@@ -165,25 +165,23 @@ void ModuleSystemusage::draw(std::list<sf::Vector2f*> points) {
 	if(points.size() < 2) return;
 	int xoffset = 0;
 	int yoffset = 0;
-	float tlheight = getDisplayHeight() - 1.5*yoffset;
-	float tlwidth = getDisplayWidth() - 2*xoffset;
+	float tlheight = getDisplayHeight() - 1.5F*yoffset;
 
 	sf::VertexArray bg = sf::VertexArray(sf::TrianglesStrip, points.size() * 2);
 	int i = 0;
-	for(std::list<sf::Vector2f*>::iterator it = points.begin(); it != points.end(); ++it) {
-		bg[2*i].position = sf::Vector2f(xoffset + (*it)->x, tlheight);
-		bg[2*i+1].position = sf::Vector2f(xoffset + (*it)->x, yoffset + (*it)->y);
+	for (auto &point : points) {
+		bg[2*i].position = sf::Vector2f(xoffset + point->x, tlheight);
+		bg[2*i+1].position = sf::Vector2f(xoffset + point->x, yoffset + point->y);
 		bg[2*i].color = bg[2*i+1].color = bgcolor;
-//		std::cout << bg[2*i+1].position.x << " " << bg[2*i+1].position.y << std::endl;
 		++i;
 	}
 	t->draw(bg);
 	for(i = 1; i < points.size(); ++i) {
 		sf::Vector2f p1 = bg[2*i-1].position;
 		sf::Vector2f p2 = bg[2*i+1].position;
-		line.setPosition(p1.x - 1.5, p1.y - 1.5);
-		line.setSize(sf::Vector2f(std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2)) + 3, 3));
-		line.setRotation(std::atan((p2.y - p1.y) / (p2.x - p1.x)) * 180/M_PIl);
+		line.setPosition(p1.x - 1.5F, p1.y - 1.5F);
+		line.setSize(sf::Vector2f((float) std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2)) + 3, 3));
+		line.setRotation((float) (std::atan((p2.y - p1.y) / (p2.x - p1.x)) * 180/M_PIl));
 		t->draw(line);
 	}
 }
