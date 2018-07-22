@@ -146,13 +146,13 @@ std::string ModuleSystemusage::exec(const char* cmd) {
 std::__cxx11::string ModuleSystemusage::bytesToHumanReadableFormat(const long bytes) const {
 	std::stringstream ss;
 	if(bytes > 1024 * 1024 * 1024) {
-		ss << 100 * bytes / (1024 * 1024 * 1024) / 100F;
+		ss << 100 * bytes / (1024 * 1024 * 1024) / (float) 100;
 		ss << " GB";
 	} else if(bytes > 1024 * 1024) {
-		ss  << 100 * bytes / (1024 * 1024) / 100F;
+		ss  << 100 * bytes / (1024 * 1024) / (float) 100;
 		ss << " MB";
 	} else if(bytes > 1024) {
-		ss << 100 * bytes / 1024 / 100F;
+		ss << 100 * bytes / 1024 / (float) 100;
 		ss << " KB";
 	} else {
 		ss << std::setw(6) << std::setfill(' ') << bytes;
