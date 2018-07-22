@@ -9,11 +9,6 @@ ModuleRam::ModuleRam(std::string host) : ModuleSystemusage(host) {}
 ModuleRam::~ModuleRam() = default;
 
 void ModuleRam::draw() {
-    int xoffset = 0;
-    int yoffset = 0;
-    float tlheight = getDisplayHeight() - 1.5*yoffset;
-    float tlwidth = getDisplayWidth() - 2*xoffset;
-
     mutex->lock();
     if (!snapshots->empty()) {
 		SystemusageSnapshot* last = nullptr;
@@ -22,7 +17,7 @@ void ModuleRam::draw() {
 			for(; i != snapshots->end();) {
 				if(*i && *i != nullptr) {
 					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < 3) {
-						points.push_back(new sf::Vector2f((1 - (*i)->getAge().asSeconds() / 180.0) * getDisplayWidth(),
+						points.push_back(new sf::Vector2f((1 - (*i)->getAge().asSeconds() / 180F) * getDisplayWidth(),
 														  (1 - (float) (*i)->getMem() / (*i)->getTotalmem()) *
 														  getDisplayHeight()));
 						last = *i;
@@ -53,8 +48,8 @@ void ModuleRam::draw() {
 		sf::FloatRect textrect = text.getLocalBounds();
 		float scaleX = (getDisplayWidth() - 2*padding) / textrect.width;
 		float scaleY = (getDisplayHeight() - 2*padding) / (textrect.height);
-		float scale = std::min(scaleX, scaleY) / 1.6;
-		text.setCharacterSize(80 * scale);
+		float scale = std::min(scaleX, scaleY) / 1.6F;
+		text.setCharacterSize((unsigned int) (80 * scale));
 
 		std::stringstream ss;
 		ss << bytesToHumanReadableFormat(snapshots->back()->getMem());
@@ -73,4 +68,3 @@ void ModuleRam::draw() {
     } else
         mutex->unlock();
 }
-

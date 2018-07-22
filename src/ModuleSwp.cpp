@@ -9,20 +9,18 @@ ModuleSwp::ModuleSwp(std::string host) : ModuleSystemusage(host) {
 
 }
 
-ModuleSwp::~ModuleSwp() {
-
-}
+ModuleSwp::~ModuleSwp() = default;
 
 void ModuleSwp::draw() {
 	mutex->lock();
 	if (!snapshots->empty()) {
 		SystemusageSnapshot* last = nullptr;
-		for(std::list<SystemusageSnapshot*>::iterator i = snapshots->begin(); i != snapshots->end();) {
+		for(auto i = snapshots->begin(); i != snapshots->end();) {
 			std::list<sf::Vector2f*> points;
 			for(; i != snapshots->end();) {
 				if(*i) {
 					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < 3) {
-						points.push_back(new sf::Vector2f((1 - (*i)->getAge().asSeconds() / 180.0) * getDisplayWidth(),
+						points.push_back(new sf::Vector2f((float) (1 - (*i)->getAge().asSeconds() / 180.0) * getDisplayWidth(),
 														  (1 - (float) (*i)->getSwp() / (*i)->getTotalswp()) *
 														  getDisplayHeight()));
 						last = *i;
@@ -52,8 +50,8 @@ void ModuleSwp::draw() {
 		sf::FloatRect textrect = text.getLocalBounds();
 		float scaleX = (getDisplayWidth() - 2*padding) / textrect.width;
 		float scaleY = (getDisplayHeight() - 2*padding) / (textrect.height);
-		float scale = std::min(scaleX, scaleY) / 1.6;
-		text.setCharacterSize(80 * scale);
+		float scale = std::min(scaleX, scaleY) / 1.6F;
+		text.setCharacterSize((unsigned int) (80 * scale));
 
 		std::stringstream ss;
 		ss << bytesToHumanReadableFormat(snapshots->back()->getSwp());
