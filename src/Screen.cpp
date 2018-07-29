@@ -30,7 +30,7 @@ Screen::Screen() {
 
     g = new Grid(3, 5);
     t = new ThemeDefault();
-    t = new ThemeMovingShapes();
+    t = new ThemeMovingShapes(ShapeTheme::THEME_4);
 
 }
 Screen::~Screen() {
