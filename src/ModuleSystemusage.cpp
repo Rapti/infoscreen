@@ -3,6 +3,7 @@
 //
 
 #include "ModuleRam.h"
+#include "Screen.h"
 #include <sstream>
 #include <cmath>
 #include <iomanip>
@@ -26,7 +27,7 @@ ModuleSystemusage::ModuleSystemusage(std::string host) : Module() {
     }
     map[host]->push_back(this);
     line.setOrigin(1.5, 1.5);
-	line.setFillColor(linecolor);
+	line.setFillColor(Screen::singleton->getTheme()->getDiagramLine());
 }
 
 ModuleSystemusage::~ModuleSystemusage() {
@@ -172,7 +173,7 @@ void ModuleSystemusage::draw(std::list<sf::Vector2f*> points) {
 	for (auto &point : points) {
 		bg[2*i].position = sf::Vector2f(xoffset + point->x, tlheight);
 		bg[2*i+1].position = sf::Vector2f(xoffset + point->x, yoffset + point->y);
-		bg[2*i].color = bg[2*i+1].color = bgcolor;
+		bg[2*i].color = bg[2*i+1].color = Screen::singleton->getTheme()->getDiagramFill();
 		++i;
 	}
 	t->draw(bg);

@@ -12,6 +12,7 @@
 #include <list>
 #include "Module.h"
 #include "EventListener.h"
+#include "ThemeDefault.h"
 
 
 class Screen {
@@ -21,6 +22,7 @@ private:
     sf::Sprite* bgs;
     Grid* g;
 	std::vector<EventListener*> listeners;
+	Theme* t;
 public:
     Screen();
     virtual ~Screen();
@@ -32,6 +34,7 @@ public:
     static Screen* singleton;
     sf::View view;
     sf::RenderWindow* window;
+    Theme* getTheme();
 
 	void removeEventListener(EventListener* e);
 };

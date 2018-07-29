@@ -3,6 +3,7 @@
 //
 
 #include "Grid.h"
+#include "Screen.h"
 
 Grid::Grid(int w, int h) {
     gridWidth = w;
@@ -60,15 +61,19 @@ void Grid::setMargin(int margin) {
 void Grid::drawTo(sf::RenderTarget *t) {
     for(Module* m: modules) {
         if(m->drawBackground()) {
-            sf::RectangleShape rs(sf::Vector2f(m->getDisplayWidth() + 6, m->getDisplayHeight() + 6));
-            rs.setOutlineColor(sf::Color(255, 255, 255, 64));
-            rs.setOutlineThickness(-3);
-            rs.setFillColor(sf::Color(255, 255, 255, 64));
-            rs.setPosition(m->getDisplayX() - 3, m->getDisplayY() - 3);
-            t->draw(rs);
+			sf::RectangleShape rs(sf::Vector2f(m->getDisplayWidth() + 6, m->getDisplayHeight() + 6));
+			rs.setOutlineColor(Screen::singleton->getTheme()->getModuleOutline());
+			rs.setOutlineThickness(-3);
+			rs.setFillColor(Screen::singleton->getTheme()->getModuleBG());
+			rs.setPosition(m->getDisplayX() - 3, m->getDisplayY() - 3);
+			t->draw(rs);
         }
-        sf::Sprite s(m->render()->getTexture());
+        sf::Texture tex = m->render()->getTexture();
+        sf::Sprite s(tex);
+//        sf::Image img = tex.copyToImage();
+//        sf::Color col = img.getPixel(1, 1);
+//        std::cout << std::to_string(col.r) << std::endl;
         s.setPosition(m->getDisplayX(), m->getDisplayY());
-        t->draw(s, sf::BlendAdd);
+        t->draw(s, sf::BlendAlpha);
     }
 }

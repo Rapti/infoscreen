@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include "ModuleCpu.h"
+#include "Screen.h"
 
 ModuleCpu::ModuleCpu(std::string host) : ModuleSystemusage(host) {
 }
@@ -69,7 +70,7 @@ void ModuleCpu::draw() {
 			int padding = 10;
 			sf::Text text;
 			text.setFont(monospace);
-			text.setFillColor(sf::Color(255, 255, 255, 128));
+			text.setFillColor(Screen::singleton->getTheme()->getTextTertiary());
 
 			text.setString("100 %");
 			text.setCharacterSize(80);

@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include "ModulePing.h"
+#include "Screen.h"
 #include <cmath>
 #include <cstring>
 
@@ -82,17 +83,17 @@ void ModulePing::draw() {
 
 	int i = 0;
 	for(const Host* h: hosts) {
-		text.setFillColor(sf::Color::White);
+		text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		text.setPosition(padding, i * (maxh * scale * (ypadding + 1)));
 		text.setString(h->getName());
 		t->draw(text);
 
 		if(h->isUp()) {
 			text.setString("Online");
-			text.setFillColor(sf::Color::White);
+			text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		} else {
 			text.setString("Offline");
-			text.setFillColor(sf::Color::Red);
+			text.setFillColor(Screen::singleton->getTheme()->getTextError());
 		}
 		sf::FloatRect rect = text.getLocalBounds();
 		text.setPosition(getDisplayWidth() - rect.width - padding * 2, i * (maxh * scale * (ypadding + 1)));

@@ -3,6 +3,7 @@
 //
 
 #include "ModuleTime.h"
+#include "Screen.h"
 #include <sstream>
 #include <chrono>
 
@@ -62,7 +63,7 @@ void ModuleTime::draw() {
 //    ss << ":" << std::setw(2) << std::setfill('0') << (hs % 100); // Uncomment this to add hundreds of a second to the clock
     text.setString(ss.str());
 
-    text.setFillColor(sf::Color::White);
+	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
     text.setPosition((getDisplayWidth() - scale * textrect.width) / 2, 0);
     t->draw(text);
 
@@ -79,7 +80,7 @@ void ModuleTime::draw() {
     scale = std::min(scaleX, scaleY);
     text.setCharacterSize(80 * scale);
 
-    text.setFillColor(sf::Color::White);
+    text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
     text.setPosition((getDisplayWidth() - scale * textrect.width) / 2, getDisplayHeight() * timeAndDateRatio + 0);
     t->draw(text);
 

@@ -35,11 +35,14 @@ Screen::Screen() {
     bgs = new sf::Sprite;
     bgs->setTexture(*bg);
     g = new Grid(3, 5);
+    t = new ThemeDefault();
 
 }
 Screen::~Screen() {
     delete window;
     delete g;
+    delete bg;
+    delete bgs;
 }
 
 sf::RenderWindow* Screen::getWindow() {
@@ -78,6 +81,7 @@ void Screen::updateSize() {
 void Screen::renderLoop() {
     updateSize();
     sf::Color bgc(0,0,128);
+//    BackgroundMovingDots background;
     while (window->isOpen()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // check all the window's events that were triggered since the last iteration of the loop
@@ -89,6 +93,7 @@ void Screen::renderLoop() {
             if (event.type == sf::Event::Resized) {
                 view.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
                 view.setSize(event.size.width, event.size.height);
+//                background.updateDisplaySize(event.size.width, event.size.height);
                 window->setView(view);
                 updateSize();
             }
@@ -100,8 +105,8 @@ void Screen::renderLoop() {
         }
 
         window->clear(bgc);
-        window->draw(*bgs);
-
+//        window->draw(*bgs);
+//		background.renderTo(window);
         g->drawTo(window);
 
         window->display();
@@ -118,4 +123,8 @@ void Screen::removeEventListener(EventListener* e) {
 		} else
 			++i;
 	}
+}
+
+Theme* Screen::getTheme() {
+    return t;
 }

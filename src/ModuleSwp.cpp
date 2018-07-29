@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include "ModuleSwp.h"
+#include "Screen.h"
 
 ModuleSwp::ModuleSwp(std::string host) : ModuleSystemusage(host) {
 
@@ -43,7 +44,7 @@ void ModuleSwp::draw() {
 		int padding = 10;
 		sf::Text text;
 		text.setFont(monospace);
-		text.setFillColor(sf::Color(255, 255, 255, 128));
+		text.setFillColor(Screen::singleton->getTheme()->getTextTertiary());
 
 		text.setString("000.00 GB");
 		text.setCharacterSize(80);

@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include "ModulePublicTransitStop.h"
+#include "Screen.h"
 #include <curl/curl.h>
 #include <iomanip>
 #include <cmath>
@@ -45,18 +46,17 @@ void ModulePublicTransitStop::draw() {
 	std::time(&now);
 
 	for(std::list<Train*>::iterator i = trains.begin(); i != trains.end(); ++i) {
-		text.setFillColor(sf::Color::White);
+		text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		text.setString((*i)->getName() + " ");
 		text.setPosition(padding, padding + y);
 		t->draw(text);
 
-		text.setFillColor(sf::Color(255, 255, 255, 160));
+		text.setFillColor(Screen::singleton->getTheme()->getTextSecondary());
 		text.setPosition(padding + text.getGlobalBounds().width, text.getPosition().y);
 		text.setString((*i)->getDestination());
-//		text.setString(L"Teßt");
 		t->draw(text);
 
-		text.setFillColor(sf::Color::White);
+		text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		std::stringstream ss;
 		struct tm tm;
 		time_t time = (*i)->getDeparture();
@@ -67,7 +67,7 @@ void ModulePublicTransitStop::draw() {
 		t->draw(text);
 
 		if((*i)->isDelayed()) {
-			text.setFillColor(sf::Color::Red);
+			text.setFillColor(Screen::singleton->getTheme()->getTextError());
 			text.setPosition(text.getPosition().x + text.getLocalBounds().width, text.getPosition().y);
 			ss.str("");
 			ss << "+" << (*i)->getDelay();
@@ -77,7 +77,7 @@ void ModulePublicTransitStop::draw() {
 
 		if((*i)->isCancelled()) {
 			text.setString(L"fällt aus");
-			text.setFillColor(sf::Color::Red);
+			text.setFillColor(Screen::singleton->getTheme()->getTextError());
 		} else {
 			int minutes = ceil(difftime(time, now) / 60) + (*i)->getDelay();
 			if(minutes == 0)
@@ -93,13 +93,13 @@ void ModulePublicTransitStop::draw() {
 					ss << "n";
 				text.setString(ss.str());
 			}
-			text.setFillColor(sf::Color::White);
+			text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		}
 		text.setPosition(getDisplayWidth() - text.getLocalBounds().width - padding, text.getPosition().y);
 		t->draw(text);
 
 		sf::RectangleShape rs;
-		rs.setFillColor(sf::Color(255, 255, 255, 64));
+		rs.setFillColor(Screen::singleton->getTheme()->getModuleOutline());
 		rs.setSize(sf::Vector2f(getDisplayWidth(), 3));
 		rs.setPosition(0, text.getPosition().y + textSize + padding);
 

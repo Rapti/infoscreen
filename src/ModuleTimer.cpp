@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iomanip>
 #include "ModuleTimer.h"
+#include "Screen.h"
 
 ModuleTimer::ModuleTimer() {
 }
@@ -49,7 +50,7 @@ void ModuleTimer::draw() {
 	float scaleY = (getDisplayHeight() - 2*padding) / (textrect.height);
 	float scale = std::min(scaleX, scaleY);
 	text.setCharacterSize(testsize * scale);
-	text.setFillColor(sf::Color::White);
+	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 
 	int h, m, s, ms;
 
@@ -64,7 +65,7 @@ void ModuleTimer::draw() {
 		int elapsed = c.getElapsedTime().asMilliseconds();
 		if(elapsed > target) {
 			h = m = s = ms = 0;
-			text.setFillColor(sf::Color(255, 255, 255, 64));
+			text.setFillColor(Screen::singleton->getTheme()->getTextDisabled());
 		} else {
 			int remaining = target - elapsed;
 			h = remaining / 3600000; remaining %= 3600000;

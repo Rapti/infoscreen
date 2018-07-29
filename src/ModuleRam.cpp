@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include "ModuleRam.h"
+#include "Screen.h"
 
 ModuleRam::ModuleRam(std::string host) : ModuleSystemusage(host) {}
 ModuleRam::~ModuleRam() = default;
@@ -41,7 +42,7 @@ void ModuleRam::draw() {
 		int padding = 10;
 		sf::Text text;
 		text.setFont(monospace);
-		text.setFillColor(sf::Color(255, 255, 255, 128));
+		text.setFillColor(Screen::singleton->getTheme()->getTextTertiary());
 
 		text.setString("000.00 GB");
 		text.setCharacterSize(80);

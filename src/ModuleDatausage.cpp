@@ -13,15 +13,15 @@ ModuleDatausage::ModuleDatausage() : Module() {
     upload = 0;
     download = 0;
     limit = 0;
-    rect.setFillColor(bgcolor);
+    rect.setFillColor(Screen::singleton->getTheme()->getDiagramFill());
     rect.setPosition(0, 0);
-    line.setFillColor(linecolor);
+    line.setFillColor(Screen::singleton->getTheme()->getDiagramLine());
     line.setPosition(0, 0);
-    dayline.setFillColor(bgcolor);
+    dayline.setFillColor(Screen::singleton->getTheme()->getDiagramFill());
     dayline.setPosition(0, 0);
     tri = sf::VertexArray(sf::Triangles, 6);
     for(int i = 0; i < 6; ++i) {
-        tri[i].color = linecolor;
+        tri[i].color = Screen::singleton->getTheme()->getDiagramLine();
     }
     mutex = new std::mutex();
     active = true;
@@ -186,7 +186,7 @@ void ModuleDatausage::draw() {
             if (pos + textwidth > tlwidth)
                 pos = tlwidth - textwidth;
         }
-
+		text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
         text.setPosition(pos, yoffset + 20);
         t->draw(text);
     }

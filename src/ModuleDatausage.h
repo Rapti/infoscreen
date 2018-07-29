@@ -22,8 +22,6 @@ private:
     int download;
     int limit;
 
-    sf::Color bgcolor = sf::Color(255, 255, 255, 64);
-    sf::Color linecolor = sf::Color::White;
     sf::RectangleShape rect;
     sf::RectangleShape line;
     sf::RectangleShape dayline;
