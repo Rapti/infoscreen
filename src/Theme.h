@@ -7,12 +7,13 @@
 
 
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 class Theme {
 public:
 	Theme();
 	virtual ~Theme();
-	void drawBackground();
+	virtual void drawBackgroundTo(sf::RenderTarget* canvas) = 0;
 
 	const sf::Color &getModuleBG() const;
 	const sf::Color &getModuleOutline() const;
@@ -23,8 +24,10 @@ public:
 	const sf::Color &getTextDisabled() const;
 	const sf::Color &getDiagramFill() const;
 	const sf::Color &getDiagramLine() const;
+	virtual void updateDisplaySize(unsigned int w, unsigned int h);
 
 protected:
+	unsigned int w, h;
 	sf::Color ModuleBG;
 	sf::Color ModuleOutline;
 	sf::Color TextPrimary;

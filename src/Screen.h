@@ -13,6 +13,7 @@
 #include "Module.h"
 #include "EventListener.h"
 #include "ThemeDefault.h"
+#include "ThemeMovingShapes.h"
 
 
 class Screen {

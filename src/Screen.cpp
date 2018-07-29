@@ -28,21 +28,15 @@ Screen::Screen() {
     view.reset(sf::FloatRect(0, 0, 1366, 768));
     window->setView(view);
 
-    bg = new sf::Texture;
-
-//    bg->loadFromFile("/home/leon/ClionProjects/Infoscreen/res/images/nature-trees-blur-blurred.jpg");
-    bg->loadFromFile("/usr/share/images/Amazing-night-sky-blurred.jpg");
-    bgs = new sf::Sprite;
-    bgs->setTexture(*bg);
     g = new Grid(3, 5);
     t = new ThemeDefault();
+    t = new ThemeMovingShapes();
 
 }
 Screen::~Screen() {
     delete window;
     delete g;
-    delete bg;
-    delete bgs;
+    delete t;
 }
 
 sf::RenderWindow* Screen::getWindow() {
@@ -68,20 +62,14 @@ void Screen::run() {
 }
 
 void Screen::updateSize() {
-    float scale = 0;
-    float scaleX = (float) view.getSize().x / bg->getSize().x;
-    float scaleY = (float) view.getSize().y / bg->getSize().y;
-    if(scaleX > scaleY)
-        scale = scaleX;
-    else scale = scaleY;
-    bgs->setScale(scale, scale);
     g->updateDisplaySize(view.getSize().x, view.getSize().y);
+    t->updateDisplaySize(view.getSize().x, view.getSize().y);
 }
 
 void Screen::renderLoop() {
     updateSize();
-    sf::Color bgc(0,0,128);
-//    BackgroundMovingDots background;
+    sf::Color bgc(0,0,128); // Fallback background color
+//    ThemeMovingShapes background;
     while (window->isOpen()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         // check all the window's events that were triggered since the last iteration of the loop
@@ -93,7 +81,6 @@ void Screen::renderLoop() {
             if (event.type == sf::Event::Resized) {
                 view.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
                 view.setSize(event.size.width, event.size.height);
-//                background.updateDisplaySize(event.size.width, event.size.height);
                 window->setView(view);
                 updateSize();
             }
@@ -105,10 +92,8 @@ void Screen::renderLoop() {
         }
 
         window->clear(bgc);
-//        window->draw(*bgs);
-//		background.renderTo(window);
+		t->drawBackgroundTo(window);
         g->drawTo(window);
-
         window->display();
     }
 }

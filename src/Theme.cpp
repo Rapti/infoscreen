@@ -45,3 +45,8 @@ const sf::Color &Theme::getDiagramFill() const {
 const sf::Color &Theme::getDiagramLine() const {
 	return DiagramLine;
 }
+
+void Theme::updateDisplaySize(unsigned int w, unsigned int h) {
+	this->w = w;
+	this->h = h;
+}
