@@ -64,7 +64,7 @@ public:
 	virtual ~Shape();
 	virtual void reset(float screenw, float screenh, bool anywhere);
 	bool update(float factor, float screenw, float screenh);
-private:
+protected:
 	float yspeed;
 	float xspeed;
 	float rspeed;

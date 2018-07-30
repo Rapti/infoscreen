@@ -127,6 +127,7 @@ void ThemeMovingShapes::generate(bool anywhere) {
 			case THEME_3:
 				s = new ShapeStyle3(w, h); break;
 			case THEME_4:
+				shapesPer1000SquarePixels = 1;
 				s = new ShapeStyle4(w, h); break;
 		}
 		s->reset(w, h, anywhere);
@@ -172,8 +173,14 @@ void Shape::reset(float screenw, float screenh, bool anywhere) {
 				setPosition(rand() % int(screenw + 2 * radius) - radius, screenh + radius); break;
 		}
 	}
-	setXspeed(((rand() % 2) * 2 - 1) * 10);
-	setYspeed(((rand() % 2) * 2 - 1) * 10);
+
+	float r = rand() / (RAND_MAX / 1.0);
+//	std::cout << sin(r * M_2_PI) << std::endl;
+	xspeed = sin(r * M_PI * 2) * 10;
+	yspeed = cos(r * M_PI * 2) * 10;
+
+//	setXspeed(((rand() % 2) * 2 - 1) * 10);
+//	setYspeed(((rand() % 2) * 2 - 1) * 10);
 	setRspeed(rand() % 10 - 5);
 }
 
@@ -288,9 +295,11 @@ sf::Color hsv(int hue, float sat, float val) {
 sf::Clock ShapeStyle4::clock;
 void ShapeStyle4::reset(float screenw, float screenh, bool anywhere) {
 	float brightness = 0.1;
-	sf::Color c = hsv(clock.getElapsedTime().asSeconds() / -2.5, 1, 0.1);
+	sf::Color c = hsv(clock.getElapsedTime().asSeconds() / -2.5, 1, brightness);
 //	std::cout << clock.getElapsedTime().asMilliseconds() << std::endl;
 	sf::Color b(255 * brightness, 255 * brightness, 255 * brightness);
 	setFillColor(c);
 	Shape::reset(screenw, screenh, anywhere);
+	xspeed *= 0.5;
+	yspeed *= 0.5;
 }
