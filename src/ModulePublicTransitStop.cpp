@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <cmath>
 #include <codecvt>
+#include <ctime>
 
 ModulePublicTransitStop::ModulePublicTransitStop(const std::string &city, const std::string &stop): Module() {
     this->city = city;
@@ -169,9 +170,10 @@ void ModulePublicTransitStop::refreshLoop() {
 
 		for(rapidjson::Value::ValueIterator i =  data["raw"].Begin(); i != data["raw"].End(); ++i) {
 			Train* t = new Train();
-			t->setName((*i)["line"].GetString());
+			rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::MemoryPoolAllocator<>> &jsonTrain = *i;
+			t->setName(jsonTrain["line"].GetString());
 //			std::string str("Teßt");
-			std::string str((*i)["destination"].GetString());
+			std::string str(jsonTrain["destination"].GetString());
 
 
 			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -181,30 +183,40 @@ void ModulePublicTransitStop::refreshLoop() {
 
 //			std::cout << (*i)["line"].GetString() << " " << (*i)["destination"].GetString() << std::endl;
 			struct std::tm tm;
+			tm.tm_sec = 0;
+			tm.tm_min = 0;
+			tm.tm_hour = 0;
+			tm.tm_mday = 0;
+			tm.tm_wday = 0;
+			tm.tm_yday = 0;
+			tm.tm_mon = 0;
+			tm.tm_year = 0;
+			tm.tm_isdst = 0;
 			std::stringstream ss;
-			ss.str("");
-			ss << (*i)["sched_date"].GetString();
+			ss << jsonTrain["sched_date"].GetString();
 			ss << " ";
-			ss << (*i)["sched_time"].GetString();
+			ss << jsonTrain["sched_time"].GetString();
 			mktime(&tm);
 			ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
 			tm.tm_sec = 0;
 			time_t time = mktime(&tm);
+			struct tm* localtm = gmtime(&time);
+			time = mktime(localtm);
 //			std::cout << ss.str() << std::endl;
 //			std::cout << asctime(localtime(&time)) << std::endl;
 			t->setDeparture(time);
 
-			if(!(*i)["delay"].IsNull()) {
-				if((*i)["delay"].IsString())
-					t->setDelay(atoi((*i)["delay"].GetString()));
-				else t->setDelay((*i)["delay"].GetInt());
+			if(!jsonTrain["delay"].IsNull()) {
+				if(jsonTrain["delay"].IsString())
+					t->setDelay(atoi(jsonTrain["delay"].GetString()));
+				else t->setDelay(jsonTrain["delay"].GetInt());
 			}
-			if(!(*i)["is_cancelled"].IsNull()) {
-				if((*i)["is_cancelled"].IsString())
-					t->setCancelled(atoi((*i)["is_cancelled"].GetString()) == 1);
-				else if((*i)["is_cancelled"].IsInt())
-					t->setCancelled((*i)["is_cancelled"].GetInt() == 1);
-				else t->setCancelled((*i)["is_cancelled"].GetBool());
+			if(!jsonTrain["is_cancelled"].IsNull()) {
+				if(jsonTrain["is_cancelled"].IsString())
+					t->setCancelled(atoi(jsonTrain["is_cancelled"].GetString()) == 1);
+				else if(jsonTrain["is_cancelled"].IsInt())
+					t->setCancelled(jsonTrain["is_cancelled"].GetInt() == 1);
+				else t->setCancelled(jsonTrain["is_cancelled"].GetBool());
 			}
 			trains.push_back(t);
 		}
