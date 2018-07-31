@@ -94,3 +94,40 @@ bool Train::isCancelled() {
 void Train::setCancelled(bool c) {
 	cancelled = c;
 }
+
+bool Train::isInvalid() const {
+	return invalid;
+}
+
+void Train::setInvalid(bool invalid) {
+	Train::invalid = invalid;
+}
+
+const std::string &Train::getID() const {
+	return id;
+}
+
+void Train::setID(const std::string &id) {
+	Train::id = id;
+}
+
+int Train::getIndex() const {
+	return index;
+}
+
+void Train::setIndex(int index) {
+	Train::prev_index = Train::index;
+	Train::index = index;
+}
+
+int Train::getPreviousIndex() const {
+	return prev_index;
+}
+
+float Train::getAge() {
+	return lastUpdate.getElapsedTime().asSeconds();
+}
+
+void Train::markAsUpdated() {
+	lastUpdate.restart();
+}

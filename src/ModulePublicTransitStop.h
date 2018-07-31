@@ -23,6 +23,7 @@ private:
 	bool active;
 	std::thread* thread;
 	std::mutex* mutex;
+	sf::Clock clock;
 
 public:
     ModulePublicTransitStop(const std::string &city, const std::string &stop);
