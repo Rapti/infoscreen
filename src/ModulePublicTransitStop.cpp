@@ -182,7 +182,7 @@ void ModulePublicTransitStop::refreshLoop() {
 		mutex->lock();
 
 		for(auto i = trains.begin(); i != trains.end();) {
-			if((*i)->isInvalid() && (*i)->getPreviousIndex() < 0) { // Remove trains that haven't showed up in the last json or are off-screen.
+			if((*i)->getIndex() < 0 && (*i)->getPreviousIndex() < 0) { // Remove trains that are off-screen.
 				delete *i;
 				i = trains.erase(i);
 			} else {
@@ -196,82 +196,11 @@ void ModulePublicTransitStop::refreshLoop() {
 			for(auto train: trains)
 				train->markAsUpdated();
 		} else {
-			for (rapidjson::Value::ValueIterator i = data["raw"].Begin(); i != data["raw"].End(); ++i) {
-				Train* t = nullptr;
-				rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::MemoryPoolAllocator<>> &jsonTrain = *i;
-				std::string id = std::string(jsonTrain["lineref"]["identifier"].GetString()) + " " +
-								 jsonTrain["sched_time"].GetString();
-				for (auto candidate: trains) {
-//				std::cout << "Comparing " << id << " to " << candidate->getID() << std::endl;
-					if (candidate->getID().compare(id) == 0) {
-						t = candidate;
-						break;
-					}
-				}
-				if (t == nullptr) {
-					t = new Train();
-					t->setID(id);
-					trains.push_back(t);
-				}
-				t->setInvalid(false);
-				t->setName(jsonTrain["line"].GetString());
-				std::string str(jsonTrain["destination"].GetString());
-
-
-				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-				std::wstring wide = converter.from_bytes(str);
-
-				t->setDestination(wide);
-
-				struct std::tm tm;
-				tm.tm_sec = 0;
-				tm.tm_min = 0;
-				tm.tm_hour = 0;
-				tm.tm_mday = 0;
-				tm.tm_wday = 0;
-				tm.tm_yday = 0;
-				tm.tm_mon = 0;
-				tm.tm_year = 0;
-				tm.tm_isdst = 0;
-				std::stringstream ss;
-				ss << jsonTrain["sched_date"].GetString();
-				ss << " ";
-				ss << jsonTrain["sched_time"].GetString();
-				mktime(&tm);
-				ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
-				tm.tm_sec = 0;
-				time_t time = mktime(&tm);
-				struct tm* localtm = gmtime(&time);
-				time = mktime(localtm);
-//			std::cout << ss.str() << std::endl;
-//			std::cout << asctime(localtime(&time)) << std::endl;
-				t->setDeparture(time);
-
-				if (!jsonTrain["delay"].IsNull()) {
-					if (jsonTrain["delay"].IsString())
-						t->setDelay(atoi(jsonTrain["delay"].GetString()));
-					else t->setDelay(jsonTrain["delay"].GetInt());
-				}
-				if (!jsonTrain["is_cancelled"].IsNull()) {
-					if (jsonTrain["is_cancelled"].IsString())
-						t->setCancelled(atoi(jsonTrain["is_cancelled"].GetString()) == 1);
-					else if (jsonTrain["is_cancelled"].IsInt())
-						t->setCancelled(jsonTrain["is_cancelled"].GetInt() == 1);
-					else t->setCancelled(jsonTrain["is_cancelled"].GetBool());
-				}
-				t->markAsUpdated();
-			}
-
-
-//			for(int i = 0; i < 20; ++i) {  // Create some testing trains
-//				time_t now;
-//				std::time(&now);
-//				struct tm* tm = std::localtime(&now);
-//				tm->tm_min += i;
-//				now = std::mktime(tm);
-//				std::string id = "lole" + std::to_string(tm->tm_hour) + ":" + std::to_string(tm->tm_min);
-//				std::cout << id << std::endl;
+//			for (rapidjson::Value::ValueIterator i = data["raw"].Begin(); i != data["raw"].End(); ++i) {
 //				Train* t = nullptr;
+//				rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::MemoryPoolAllocator<>> &jsonTrain = *i;
+//				std::string id = std::string(jsonTrain["lineref"]["identifier"].GetString()) + " " +
+//								 jsonTrain["sched_time"].GetString();
 //				for (auto candidate: trains) {
 ////				std::cout << "Comparing " << id << " to " << candidate->getID() << std::endl;
 //					if (candidate->getID().compare(id) == 0) {
@@ -282,31 +211,104 @@ void ModulePublicTransitStop::refreshLoop() {
 //				if (t == nullptr) {
 //					t = new Train();
 //					t->setID(id);
-//					t->setDeparture(now);
-//					t->setName("CAT");
-//					t->setDestination(L"Kadsen");
 //					trains.push_back(t);
 //				}
-//				if(i == 3)
-//					t->setDelay(rand() % 5);
 //				t->setInvalid(false);
+//				t->setName(jsonTrain["line"].GetString());
+//				std::string str(jsonTrain["destination"].GetString());
+//
+//
+//				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+//				std::wstring wide = converter.from_bytes(str);
+//
+//				t->setDestination(wide);
+//
+//				struct std::tm tm;
+//				tm.tm_sec = 0;
+//				tm.tm_min = 0;
+//				tm.tm_hour = 0;
+//				tm.tm_mday = 0;
+//				tm.tm_wday = 0;
+//				tm.tm_yday = 0;
+//				tm.tm_mon = 0;
+//				tm.tm_year = 0;
+//				tm.tm_isdst = 0;
+//				std::stringstream ss;
+//				ss << jsonTrain["sched_date"].GetString();
+//				ss << " ";
+//				ss << jsonTrain["sched_time"].GetString();
+//				mktime(&tm);
+//				ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
+//				tm.tm_sec = 0;
+//				time_t time = mktime(&tm);
+//				struct tm* localtm = gmtime(&time);
+//				time = mktime(localtm);
+////			std::cout << ss.str() << std::endl;
+////			std::cout << asctime(localtime(&time)) << std::endl;
+//				t->setDeparture(time);
+//
+//				if (!jsonTrain["delay"].IsNull()) {
+//					if (jsonTrain["delay"].IsString())
+//						t->setDelay(atoi(jsonTrain["delay"].GetString()));
+//					else t->setDelay(jsonTrain["delay"].GetInt());
+//				}
+//				if (!jsonTrain["is_cancelled"].IsNull()) {
+//					if (jsonTrain["is_cancelled"].IsString())
+//						t->setCancelled(atoi(jsonTrain["is_cancelled"].GetString()) == 1);
+//					else if (jsonTrain["is_cancelled"].IsInt())
+//						t->setCancelled(jsonTrain["is_cancelled"].GetInt() == 1);
+//					else t->setCancelled(jsonTrain["is_cancelled"].GetBool());
+//				}
 //				t->markAsUpdated();
 //			}
+
+
+			for(int i = 0; i < 20; ++i) {  // Create some testing trains
+				time_t now;
+				std::time(&now);
+				struct tm* tm = std::localtime(&now);
+				tm->tm_min += i;
+				now = std::mktime(tm);
+				std::string id = "lole" + std::to_string(tm->tm_hour) + ":" + std::to_string(tm->tm_min);
+				std::cout << id << std::endl;
+				Train* t = nullptr;
+				for (auto candidate: trains) {
+//				std::cout << "Comparing " << id << " to " << candidate->getID() << std::endl;
+					if (candidate->getID().compare(id) == 0) {
+						t = candidate;
+						break;
+					}
+				}
+				if (t == nullptr) {
+					t = new Train();
+					t->setID(id);
+					t->setDeparture(now);
+					t->setName("CAT");
+					t->setDestination(L"Kadsen");
+					trains.push_back(t);
+				}
+				if(i == 3)
+					t->setDelay(rand() % 5);
+				t->setInvalid(false);
+			}
 
 
 		}
 		trains.sort( []( Train *a, Train *b ) {
 			if(a->isInvalid() && !b->isInvalid()) return true;
 			if(b->isInvalid() && !a->isInvalid()) return false;
+			if(a->getDeparture() + a->getDelay() * 60 == b->getDeparture() + b->getDelay() * 60)
+				return a->getDeparture() < b->getDeparture();
 			return a->getDeparture() + a->getDelay() * 60 < b->getDeparture() + b->getDelay() * 60;
 		});
 		int i = 0;
 		time_t now;
 		std::time(&now);
 		for(Train* t: trains)  {
+			t->markAsUpdated();
 			if(t->isInvalid() || ceil(difftime(t->getDeparture(), now) / 60) + t->getDelay() < -1) {
 				--i;
-				std::cout << "Train " << t->getID() << " is invalid" << std::endl;
+//				std::cout << "Train " << t->getID() << " is invalid" << std::endl;
 				std::cout << ceil(difftime(t->getDeparture(), now) / 60) + t->getDelay() << std::endl;
 			}
 		}
