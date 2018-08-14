@@ -48,12 +48,12 @@ sf::RenderWindow* Screen::getWindow() {
 
 void Screen::run() {
 //    g->addModule(new ModuleDatausage(), 0, 0, 3, 1);
-    g->addModule(new ModuleRam("gaming-pc"), 2, 1, 1, 1);
-    g->addModule(new ModuleSwp("gaming-pc"), 2, 2, 1, 1);
-    g->addModule(new ModuleCpu("gaming-pc"), 2, 3, 1, 1);
+    g->addModule(new ModuleRam("leons-pc"), 2, 1, 1, 1);
+    g->addModule(new ModuleSwp("leons-pc"), 2, 2, 1, 1);
+    g->addModule(new ModuleCpu("leons-pc"), 2, 3, 1, 1);
     g->addModule(new ModuleTime(), 1, 0, 1, 1);
     g->addModule(new ModuleTimer(), 1, 1, 1, 1);
-    g->addModule(new ModulePing({"10.4.12.200", "gaming-pc", "192.168.178.94", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 2, 0, 1, 1);
+    g->addModule(new ModulePing({"10.4.12.200", "leons-pc", "192.168.178.94", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 2, 0, 1, 1);
     g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 0, 0, 1, 5);
 
 
