@@ -23,9 +23,14 @@ public:
     void addModule(Module *, int x, int y, int w, int h);
     void updateDisplaySize(int w, int h);
     void drawTo(sf::RenderTarget *);
+	const sf::Texture &getMask() const;
 
     Grid(int, int);
     ~Grid();
+
+	int getMargin() const;
+
+	void setMargin(int margin);
 
 private:
     int gridWidth = 0;
@@ -33,12 +38,9 @@ private:
     int displayWidth = 0;
     int displayHeight = 0;
     int margin = 16;
-public:
-    int getMargin() const;
+    sf::RenderTexture mask;
+	bool redrawMask = true;
 
-    void setMargin(int margin);
-
-private:
     std::list<Module*> modules;
 };
 

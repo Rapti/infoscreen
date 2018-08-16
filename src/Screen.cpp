@@ -113,3 +113,7 @@ void Screen::removeEventListener(EventListener* e) {
 Theme* Screen::getTheme() {
     return t;
 }
+
+Grid* Screen::getGrid() {
+    return g;
+}

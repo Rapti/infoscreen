@@ -36,6 +36,7 @@ public:
     sf::View view;
     sf::RenderWindow* window;
     Theme* getTheme();
+    Grid* getGrid();
 
 	void removeEventListener(EventListener* e);
 };
