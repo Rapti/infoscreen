@@ -23,7 +23,7 @@ void ModuleCpu::draw() {
 			std::list<sf::Vector2f*> points;
 			for (; i != snapshots->end();) {
 				if (*i) {
-					if (last == nullptr || (last->getAge().asSeconds() - (*i)->getAge().asSeconds()) < 3) {
+					if (last == nullptr || (last->getAge().asSeconds() - (*i)->getAge().asSeconds()) < MIN_GAP_WIDTH) {
 						int j = 0;
 						SystemusageSnapshot* s = *i;
 						while (i != ++snapshots->begin()) {
