@@ -20,7 +20,7 @@ void ModuleSwp::draw() {
 			std::list<sf::Vector2f*> points;
 			for(; i != snapshots->end();) {
 				if(*i) {
-					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < 3) {
+					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < MIN_GAP_WIDTH) {
 						points.push_back(new sf::Vector2f((float) (1 - (*i)->getAge().asSeconds() / 180.0) * getDisplayWidth(),
 														  (1 - (float) (*i)->getSwp() / (*i)->getTotalswp()) *
 														  getDisplayHeight()));

@@ -17,7 +17,7 @@ void ModuleRam::draw() {
 			std::list<sf::Vector2f*> points;
 			for(; i != snapshots->end();) {
 				if(*i && *i != nullptr) {
-					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < 3) {
+					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < MIN_GAP_WIDTH) {
 						points.push_back(new sf::Vector2f((1 - (*i)->getAge().asSeconds() / (float) 180) * getDisplayWidth(),
 														  (1 - (float) (*i)->getMem() / (*i)->getTotalmem()) *
 														  getDisplayHeight()));

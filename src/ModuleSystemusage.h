@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 class SystemusageSnapshot;
+static const int MIN_GAP_WIDTH = 10;
 
 class ModuleSystemusage: public Module {
 
