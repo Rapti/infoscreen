@@ -40,7 +40,7 @@ sf::RenderTexture* Module::render() {
 }
 
 void Module::updateDisplaySize() {
-    t->create(getDisplayWidth(), getDisplayHeight());
+    t->create(getDisplayWidth(), getDisplayHeight(), sf::ContextSettings(0, 0, 8));
 }
 
 int Module::getWidth() {
