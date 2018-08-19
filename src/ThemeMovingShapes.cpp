@@ -6,18 +6,22 @@
 #include <iostream>
 #include <SFML/Graphics/Sprite.hpp>
 #include "ThemeMovingShapes.h"
+#include "Screen.h"
 
 ThemeMovingShapes::ThemeMovingShapes(ShapeTheme st) : Theme() {
 	this->st = st;
 
-	blurRadius = 0;
+//	blurRadius = 0;
 	filter.setSize(sf::Vector2f(w, h));
 	int filterstrength = 200;
 	filter.setFillColor(sf::Color(filterstrength, filterstrength, filterstrength));
 
 
-	ModuleBG = sf::Color(255, 255, 255, 48);
-	ModuleOutline = sf::Color(255, 255, 255, 48);
+//	ModuleBG = sf::Color(255, 255, 255, 48);
+	ModuleBG = sf::Color(0, 0, 0, 48);
+//	ModuleBG = sf::Color(255, 255, 255, 0);
+//	ModuleOutline = sf::Color(255, 255, 255, 48);
+	ModuleOutline = sf::Color(255, 255, 255, 0);
 	TextPrimary = sf::Color::White;
 	TextSecondary = sf::Color(255, 255, 255, 128);
 	TextTertiary = sf::Color(255, 255, 255, 64);
@@ -43,13 +47,21 @@ ThemeMovingShapes::~ThemeMovingShapes() {
 		delete shape;
 	}
 	delete blurShader;
+	delete maskShader;
 	delete blurTexture1;
 	delete blurTexture2;
+	delete blurTexture3;
 }
 
 void ThemeMovingShapes::updateDisplaySize(unsigned int w, unsigned int h) {
 	Theme::updateDisplaySize(w, h);
 	filter.setSize(sf::Vector2f(w, h));
+	if(blurTexture1 != nullptr)
+		blurTexture1->create(w, h, sf::ContextSettings(0, 0, 8));
+	if(blurTexture2 != nullptr)
+		blurTexture2->create(w, h);
+	if(blurTexture3 != nullptr)
+		blurTexture3->create(w, h);
 	generate(true);
 }
 
@@ -69,11 +81,15 @@ void ThemeMovingShapes::drawBackgroundTo(sf::RenderTarget* canvas, int blurRadiu
 	} else {
 		if(blurTexture1 == nullptr) {
 			blurTexture1 = new sf::RenderTexture;
-			blurTexture1->create(w, h);
+			blurTexture1->create(w, h, sf::ContextSettings(0, 0, 8));
 		}
 		if(blurTexture2 == nullptr) {
 			blurTexture2 = new sf::RenderTexture;
-			blurTexture2->create(w, h);
+			blurTexture2->create(w, h, sf::ContextSettings(0, 0, 0));
+		}
+		if(blurTexture3 == nullptr) {
+			blurTexture3 = new sf::RenderTexture;
+			blurTexture3->create(w, h, sf::ContextSettings(0, 0, 0));
 		}
 		if(blurShader == nullptr) {
 			blurShader = new sf::Shader;
@@ -81,18 +97,35 @@ void ThemeMovingShapes::drawBackgroundTo(sf::RenderTarget* canvas, int blurRadiu
 			blurShader->setUniform("texture", sf::Shader::CurrentTexture);
 			rs.shader = blurShader;
 		}
+		if(maskShader == nullptr) {
+			maskShader = new sf::Shader;
+			maskShader->loadFromMemory("uniform sampler2D source;\n"
+							  "uniform sampler2D mask;\n"
+		                      "void main() {\n"
+						"vec4 sourceColor = texture2D(source, gl_TexCoord[0].xy);\n"
+	  "float maskAlpha = texture2D(mask, gl_TexCoord[0].xy).a;\n"
+                             	 "gl_FragColor = vec4(sourceColor.rgb, sourceColor.a * maskAlpha);\n"
+//                             	 "gl_FragColor = texture2D(mask, gl_TexCoord[0].xy);\n"
+					 		  "}", sf::Shader::Fragment);
+			maskShader->setUniform("source", sf::Shader::CurrentTexture);
+		}
 		drawBackgroundTo(blurTexture1, 0);
 		blurTexture1->display();
 		sf::Sprite s;
+		s.setTexture(blurTexture1->getTexture());
+		canvas->draw(s);
 		blurShader->setUniform("dir", sf::Vector2f(1, 0));
 		blurShader->setUniform("size", (float) w);
-		s.setTexture(blurTexture1->getTexture());
 		blurTexture2->draw(s, rs);
 		blurTexture2->display();
+		s.setTexture(blurTexture2->getTexture());
 		blurShader->setUniform("dir", sf::Vector2f(0, 1));
 		blurShader->setUniform("size", (float) h);
-		s.setTexture(blurTexture2->getTexture());
-		canvas->draw(s, rs);
+		blurTexture3->draw(s, rs);
+		blurTexture3->display();
+		s.setTexture(blurTexture3->getTexture());
+		maskShader->setUniform("mask", Screen::singleton->getGrid()->getMask());
+		canvas->draw(s, maskShader);
 	}
 }
 
