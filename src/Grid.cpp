@@ -48,6 +48,9 @@ void Grid::updateDisplaySize(int w, int h) {
     for(Module* m: modules) {
         m->updateDisplaySize();
     }
+    mask.create(w, h);
+    mask.clear(sf::Color::Transparent);
+    redrawMask = true;
 }
 
 int Grid::getMargin() const {
@@ -61,11 +64,13 @@ void Grid::setMargin(int margin) {
 void Grid::drawTo(sf::RenderTarget *t) {
     for(Module* m: modules) {
         if(m->drawBackground()) {
-			sf::RectangleShape rs(sf::Vector2f(m->getDisplayWidth() + 6, m->getDisplayHeight() + 6));
-			rs.setOutlineColor(Screen::singleton->getTheme()->getModuleOutline());
-			rs.setOutlineThickness(-3);
+			sf::RectangleShape rs(sf::Vector2f(m->getDisplayWidth(), m->getDisplayHeight()));
+			rs.setPosition(m->getDisplayX() - 0, m->getDisplayY() - 0);
+			if(redrawMask)
+				mask.draw(rs);
 			rs.setFillColor(Screen::singleton->getTheme()->getModuleBG());
-			rs.setPosition(m->getDisplayX() - 3, m->getDisplayY() - 3);
+			rs.setOutlineThickness(3);
+			rs.setOutlineColor(Screen::singleton->getTheme()->getModuleOutline());
 			t->draw(rs);
         }
         sf::Texture tex = m->render()->getTexture();
@@ -76,4 +81,9 @@ void Grid::drawTo(sf::RenderTarget *t) {
         s.setPosition(m->getDisplayX(), m->getDisplayY());
         t->draw(s, sf::BlendAlpha);
     }
+	redrawMask = false;
+}
+
+const sf::Texture &Grid::getMask() const {
+    return mask.getTexture();
 }

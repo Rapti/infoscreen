@@ -41,12 +41,14 @@ protected:
 	void generate(bool anywhere);
 	sf::RectangleShape filter;
 	int corners = 3;
-	int blurRadius = 150;
+	int blurRadius = 90;
 	sf::Color bgc = sf::Color::Black;
 	sf::Clock c;
 	sf::RenderTexture* blurTexture1 = nullptr;
 	sf::RenderTexture* blurTexture2 = nullptr;
+	sf::RenderTexture* blurTexture3 = nullptr;
 	sf::Shader* blurShader = nullptr;
+	sf::Shader* maskShader = nullptr;
 	sf::RenderStates rs;
 	float shapesPer1000SquarePixels = 1;
 	int requiredShapesCount();
