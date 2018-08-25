@@ -44,7 +44,7 @@ void ModuleCpu::draw() {
 						if(s != *i) {
 							points.push_back(
 									new sf::Vector2f(
-											(1 - (*i)->getAge().asSeconds() / cycleDuration) * getDisplayWidth(),
+											3 + (1 - (*i)->getAge().asSeconds() / cycleDuration) * getDisplayWidth(),
 											(1 - (*i)->getCpuSince(s)) * getDisplayHeight()));
 							if(i == --snapshots->end())
 								displayvalue = (*i)->getCpuSince(s);

@@ -18,7 +18,7 @@ void ModuleRam::draw() {
 			for(; i != snapshots->end();) {
 				if(*i && *i != nullptr) {
 					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < MIN_GAP_WIDTH) {
-						points.push_back(new sf::Vector2f((1 - (*i)->getAge().asSeconds() / (float) 180) * getDisplayWidth(),
+						points.push_back(new sf::Vector2f(3 + (1 - (*i)->getAge().asSeconds() / (float) 180) * getDisplayWidth(),
 														  (1 - (float) (*i)->getMem() / (*i)->getTotalmem()) *
 														  getDisplayHeight()));
 						last = *i;
