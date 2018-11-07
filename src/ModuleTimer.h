@@ -18,6 +18,7 @@ private:
 	sf::Clock lastInput;
 	int n = 0;
 	void updateTarget();
+	bool active;
 
 protected:
 	void onEvent(sf::Event) override;
