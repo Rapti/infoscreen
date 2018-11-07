@@ -28,25 +28,27 @@ ModulePublicTransitStop::~ModulePublicTransitStop() {
 
 void ModulePublicTransitStop::draw() {
 	mutex->lock();
-
+	bool useTimeline = false;
 	const int testSize = 80;
 	const float ypadding = 0.1;
 	const int padding = 5;
+	const int timelinewidth = useTimeline? 50:5;
 	sf::Text text;
 	text.setFont(natural);
 	text.setCharacterSize(testSize);
-	text.setString("HB1 Dortmund Eichlinghofen H-Bahn");
+	text.setString("HB1 Dortmund Eichlinghofen H-Bahn HEHEHEHE");
 	float tw = text.getLocalBounds().width;
 	float lw = 3;
 
-	float scale = (getDisplayWidth() - 3*padding) / tw;
+	float scale = (getDisplayWidth() - 3*padding - timelinewidth) / tw;
 	float textSize = testSize * scale;
 	text.setCharacterSize(textSize);
 
 	float entryHeight = 2 * textSize + 3 * padding + lw;
 
-	time_t now;
-	std::time(&now);
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	time_t now = tv.tv_sec;
 
 	float animationDuration = 1; // in seconds
 
@@ -60,11 +62,11 @@ void ModulePublicTransitStop::draw() {
 				train->getAge()) / animationDuration, 0))) * entryHeight;
 		text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		text.setString(train->getName() + " ");
-		text.setPosition(padding, padding + y);
+		text.setPosition(timelinewidth, padding + y);
 		t->draw(text);
 
 		text.setFillColor(Screen::singleton->getTheme()->getTextSecondary());
-		text.setPosition(padding + text.getGlobalBounds().width, text.getPosition().y);
+		text.setPosition(timelinewidth + text.getGlobalBounds().width, text.getPosition().y);
 		text.setString(train->getDestination());
 		t->draw(text);
 
@@ -74,7 +76,7 @@ void ModulePublicTransitStop::draw() {
 		time_t time = train->getDeparture();
 		tm = *localtime(&time);
 		ss << std::setw(2) << std::setfill('0') << tm.tm_hour << ":" << std::setw(2) << std::setfill('0') << tm.tm_min << " ";
-		text.setPosition(padding, text.getPosition().y + textSize + padding);
+		text.setPosition(timelinewidth, text.getPosition().y + textSize + padding);
 		text.setString(ss.str());
 		t->draw(text);
 
@@ -99,23 +101,58 @@ void ModulePublicTransitStop::draw() {
 			text.setString(L"fällt aus");
 			text.setFillColor(Screen::singleton->getTheme()->getTextError());
 		} else {
-			int minutes = ceil(difftime(time, now) / 60) + train->getDelay();
-			if(minutes == 0)
+			float minutesf = (difftime(time, now) - (tv.tv_usec / 1000000.0)) / 60 + train->getDelay();
+//			float minutesf = difftime(time, now) / 60 + train->getDelay();
+			int minutesi = ceil(minutesf);
+			if(minutesi == 0)
 				text.setString("jetzt");
 			else {
 				ss.str("");
-				if (minutes < 0)
+				if (minutesi < 0)
 					ss << "vor ";
-				if (minutes > 0)
+				if (minutesi > 0)
 					ss << "in ";
-				ss << abs(minutes) << " Minute";
-				if(abs(minutes) != 1)
+				ss << abs(minutesi) << " Minute";
+				if(abs(minutesi) != 1)
 					ss << "n";
 				text.setString(ss.str());
 			}
+			int pixelsperminute = entryHeight;
+			if(minutesi == 0)
+				minutesf = 0;
+			else if(minutesi < 0)
+				minutesf += 1;
+			float circley = (0.5 + minutesf) * pixelsperminute;
+//			if(train->getPreviousDelay() == INT32_MAX)
+//				y = train->getDelay() * entryHeight;
+//			else
+//				y = (train->getIndex() + (train->getPreviousIndex() - train->getIndex()) * (fmax((animationDuration -
+//																								  train->getAge()) / animationDuration, 0))) * entryHeight;
+			if(useTimeline && circley <= getDisplayHeight()) {
+				sf::CircleShape circle;
+				int radius = 10;
+				circle.setRadius(radius);
+//				circle.setFillColor(sf::Color(255, 255, 255, 128));
+				circle.setOrigin(radius, radius);
+				circle.setPosition(0, circley);
+				t->draw(circle);
+
+				sf::RectangleShape rect;
+				sf::Vector2f p1 = circle.getPosition();
+				sf::Vector2f p2(timelinewidth - 3, y + 0.5 * entryHeight);
+				rect.setOrigin(1.5, 1.5);
+//			rect.setPosition(p1.x + 1.5F, p1.y - 1.5F);
+				rect.setPosition(p1);
+				rect.setSize(
+						sf::Vector2f((float) std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2)) + 3, 3));
+				rect.setRotation((float) (std::atan((p2.y - p1.y) / (p2.x - p1.x)) * 180 / M_PIl));
+				rect.setFillColor(sf::Color(255, 255, 255, 128));
+				t->draw(rect);
+			}
+
 			text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		}
-		text.setPosition(getDisplayWidth() - text.getLocalBounds().width - padding, text.getPosition().y);
+		text.setPosition(getDisplayWidth() - text.getLocalBounds().width - 2*padding, text.getPosition().y);
 		t->draw(text);
 
 		sf::RectangleShape rs;
@@ -242,7 +279,7 @@ void ModulePublicTransitStop::refreshLoop() {
 				tm.tm_sec = 0;
 				time_t time = mktime(&tm);
 				struct tm* localtm = gmtime(&time);
-				time = mktime(localtm);
+//				time = mktime(localtm);
 //			std::cout << ss.str() << std::endl;
 //			std::cout << asctime(localtime(&time)) << std::endl;
 				t->setDeparture(time);

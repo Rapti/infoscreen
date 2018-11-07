@@ -131,3 +131,7 @@ float Train::getAge() {
 void Train::markAsUpdated() {
 	lastUpdate.restart();
 }
+
+int Train::getPreviousDelay() const {
+	return prev_delay;
+}

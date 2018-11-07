@@ -20,6 +20,7 @@ public:
 	time_t getDeparture() const;
 	void setDeparture(time_t departure);
 	int getDelay() const;
+	int getPreviousDelay() const;
 	void setDelay(int delay);
 	void setCancelled(bool);
 	const std::string &getPlatform() const;
@@ -47,7 +48,8 @@ public:
 
 private:
 	time_t departure;
-	int delay;
+	int delay = INT32_MAX;
+	int prev_delay = INT32_MAX;
 	sf::Clock lastUpdate;
 	std::string platform;
 	std::string name;
