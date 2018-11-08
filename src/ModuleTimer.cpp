@@ -146,6 +146,7 @@ void ModuleTimer::onEvent(sf::Event e) {
 			addMinute();
 		if(c == '-')
 			removeMinute();
+		std::cout << n << " ";
 		std::cout << n << std::endl;
 	}
 }
@@ -156,17 +157,33 @@ void ModuleTimer::addMinute() {
 		active = true;
 		n = 100;
 	} else
-		n += 100;
+		n = s2n(n2s(n) + 60);
 }
 
 void ModuleTimer::removeMinute() {
-	if(n > 100)
-		n -= 100;
-	else {
+	n = s2n(n2s(n) - 60);
+	if(n <= 0) {
 		n = 0;
 		c.restart();
 		active = false; // This is here intentionally to prevent the sound from playing.
 	}
+}
+
+int ModuleTimer::n2s(int n) { // Convert h:m:s representation to number of seconds
+	int h, m;
+
+	int x = n;
+	h = x / 10000; x %= 10000;
+	m = x / 100; x %= 100;
+
+	return x + 60 * m + 3600 * h;
+}
+
+int ModuleTimer::s2n(int s) { // Convert number of seconds to h:m:s representation
+	int h, m;
+	h = s / 3600; s %= 3600;
+	m = s / 60; s %= 60;
+	return s + 100 * m + 10000 * h;
 }
 
 void ModuleTimer::setStrLen(int length) {

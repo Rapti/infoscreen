@@ -36,7 +36,8 @@ private:
 	float getCharWidth();
 	float getCharHeight();
 
-
+	int n2s(int n);
+	int s2n(int s);
 
 protected:
 	void onEvent(sf::Event) override;
