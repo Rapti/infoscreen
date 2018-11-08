@@ -14,7 +14,7 @@
 ModuleTimer::ModuleTimer() {
 	sf::Glyph g = monospace.getGlyph('0', testSize, false);
 	charWidth100 = g.advance;
-	charHeight100 = monospace.getLineSpacing(testSize);
+	charHeight100 = g.bounds.height;
 	charSpacing100 = g.advance - g.bounds.width;
 	setStrLen(11);
 }
