@@ -90,10 +90,11 @@ void ModuleTimer::draw() {
 	text.setCharacterSize(testsize * scale);
 	textrect = text.getLocalBounds();
 	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
-	float charWidth = textrect.width / zerostring.length();
-
+//	float charWidth = textrect.width / zerostring.length();
+	float charWidth = monospace.getGlyph('0',testsize*scale,false).advance;
 	float x = (getDisplayWidth() - textrect.width) / 2;
 	float y = (getDisplayHeight() - textrect.height) / 2;
+
 	text.setPosition(x, y);
 	text.move(x - text.getGlobalBounds().left, y - text.getGlobalBounds().top); // Because somehow setPosition doesn't really set the desired position
 
