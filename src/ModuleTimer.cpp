@@ -12,6 +12,11 @@
 #include "RichText.h"
 
 ModuleTimer::ModuleTimer() {
+	sf::Glyph g = monospace.getGlyph('0', testSize, false);
+	charWidth100 = g.advance;
+	charHeight100 = monospace.getLineSpacing(testSize);
+	charSpacing100 = g.advance - g.bounds.width;
+	setStrLen(11);
 }
 
 ModuleTimer::~ModuleTimer() {
@@ -43,9 +48,6 @@ void ModuleTimer::draw() {
 
 	std::stringstream ss;
 
-	int padding = 10;
-	int testsize = 80;
-
 	int h, m, s, ms;
 
 	{
@@ -64,6 +66,7 @@ void ModuleTimer::draw() {
 		if(elapsed > target) {
 			h = m = s = ms = 0;
 			active = false;
+			setStrLen(11);
 		} else {
 			int remaining = target - elapsed;
 			h = remaining / 3600000; remaining %= 3600000;
@@ -80,29 +83,32 @@ void ModuleTimer::draw() {
 
 	std::string string = ss.str();
 
-	text.setCharacterSize(testsize);
-	std::string zerostring = "00:00:00:00";
-	text.setString(zerostring);
-	sf::FloatRect textrect = text.getLocalBounds();
-	float scaleX = (getDisplayWidth() - 2*padding) / textrect.width;
-	float scaleY = (getDisplayHeight() - 2*padding) / (textrect.height);
-	float scale = std::min(scaleX, scaleY);
-	text.setCharacterSize(testsize * scale);
-	textrect = text.getLocalBounds();
-	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
-//	float charWidth = textrect.width / zerostring.length();
-	float charWidth = monospace.getGlyph('0',testsize*scale,false).advance;
-	float x = (getDisplayWidth() - textrect.width) / 2;
-	float y = (getDisplayHeight() - textrect.height) / 2;
+	int sublength = 0;
+	while(sublength < string.length() && (string[sublength] == '0' || string[sublength] == ':')) {
+		++sublength;
+	}
+	if(inputActive) {
+		setStrLen(11);
+	} else if(active) {
+		setStrLen(std::max(4, 11 - sublength));
+	}
+
+	text.setString("00:00:00:00");
+	text.setCharacterSize(testSize);
+	float scale = getTextScale();
+	text.setScale(scale, scale);
+
+	float charWidth = getCharWidth();
+
+	float x = (getDisplayWidth() - text.getGlobalBounds().width) / 2;
+	float y = (getDisplayHeight() - text.getGlobalBounds().height) / 2;
+	if(x < padding)
+		x = x * 2 - padding;
 
 	text.setPosition(x, y);
 	text.move(x - text.getGlobalBounds().left, y - text.getGlobalBounds().top); // Because somehow setPosition doesn't really set the desired position
 
 	if(active) {
-		int sublength = 0;
-		while(sublength < string.length() && (string[sublength] == '0' || string[sublength] == ':')) {
-			++sublength;
-		}
 		if (sublength > 0 && sublength < string.length()) {
 			text.setString(string.substr(0, sublength));
 			string = string.substr(sublength);
@@ -123,7 +129,7 @@ void ModuleTimer::draw() {
 		t->draw(text);
 	} else {
 		text.setString(string);
-		if(elapsed - target < 5000 && (elapsed - target) % 1000 < 500)
+		if(n != 0 && elapsed - target < 5000 && (elapsed - target) % 1000 < 500)
 			text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 		else
 			text.setFillColor(Screen::singleton->getTheme()->getTextDisabled());
@@ -140,6 +146,7 @@ void ModuleTimer::onEvent(sf::Event e) {
 			addMinute();
 		if(c == '-')
 			removeMinute();
+		std::cout << n << std::endl;
 	}
 }
 
@@ -160,4 +167,32 @@ void ModuleTimer::removeMinute() {
 		c.restart();
 		active = false; // This is here intentionally to prevent the sound from playing.
 	}
+}
+
+void ModuleTimer::setStrLen(int length) {
+	if(strLen != length) {
+		lastStrSize = getTextScale();
+		strLen = length;
+		lastStrLenChange.restart();
+	}
+}
+
+float ModuleTimer::getTextScale() {
+//	strLen = 11;
+	float scaleX = (getDisplayWidth() - 2*padding) / (charWidth100 * strLen - charSpacing100);
+	float scaleY = (getDisplayHeight() - 2*padding) / (charHeight100);
+	float scale = std::min(scaleX, scaleY);
+	if(lastStrSize == 0 || lastStrLenChange.getElapsedTime().asSeconds() > animationDuration) {
+		return scale;
+	}
+	float animationProgress = std::pow(lastStrLenChange.getElapsedTime().asSeconds() / animationDuration, (float) 1/4);
+	return animationProgress * scale + (1-animationProgress) * lastStrSize;
+}
+
+float ModuleTimer::getCharWidth() {
+	return charWidth100 * getTextScale();
+}
+
+float ModuleTimer::getCharHeight() {
+	return charHeight100 * getTextScale();
 }

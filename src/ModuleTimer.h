@@ -16,9 +16,27 @@ private:
 	struct tm target;
 	sf::Clock c;
 	sf::Clock lastInput;
+	sf::Clock lastStrLenChange;
+	int strLen = 11;
+	float lastStrSize = 0;
 	int n = 0;
 	void updateTarget();
 	bool active;
+
+	float charWidth100 = 0;
+	float charHeight100 = 0;
+	float charSpacing100 = 0;
+	int padding = 10;
+	int testSize = 100;
+
+	float animationDuration = 0.5; // in seconds
+
+	void setStrLen(int length);
+	float getTextScale();
+	float getCharWidth();
+	float getCharHeight();
+
+
 
 protected:
 	void onEvent(sf::Event) override;
@@ -32,6 +50,7 @@ public:
 	void addMinute();
 	void removeMinute();
 };
+
 
 
 #endif //INFOSCREEN_MODULETIMER_H
