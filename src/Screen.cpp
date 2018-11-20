@@ -28,7 +28,7 @@ Screen::Screen() {
     view.reset(sf::FloatRect(0, 0, 1366, 768));
     window->setView(view);
 
-    g = new Grid(3, 5);
+    g = new Grid(60, 60);
     t = new ThemeDefault();
     t = new ThemeMovingShapes(ShapeTheme::THEME_4);
 
@@ -48,16 +48,18 @@ sf::RenderWindow* Screen::getWindow() {
 
 void Screen::run() {
 //    g->addModule(new ModuleDatausage(), 0, 0, 3, 1);
-    g->addModule(new ModuleRam("leons-pc"), 2, 1, 1, 1);
-    g->addModule(new ModuleSwp("leons-pc"), 2, 2, 1, 1);
-    g->addModule(new ModuleCpu("leons-pc"), 2, 3, 1, 1);
-    g->addModule(new ModuleRam("conciso-laptop-leon"), 1, 2, 1, 1);
-//    g->addModule(new ModuleSwp("conciso-laptop-leon"), 1, 3, 1, 1);
-    g->addModule(new ModuleCpu("conciso-laptop-leon"), 1, 3, 1, 1);
-    g->addModule(new ModuleTime(), 1, 0, 1, 1);
-    g->addModule(new ModuleTimer(), 1, 1, 1, 1);
-    g->addModule(new ModulePing({"10.4.12.200", "leons-pc", "leons-telefon", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 2, 0, 1, 1);
-    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 0, 0, 1, 5);
+    g->addModule(new ModuleCpu("leons-pc"), 45, 15, 15, 10);
+    g->addModule(new ModuleRam("leons-pc"), 45, 25, 15, 10);
+    g->addModule(new ModuleSwp("leons-pc"), 45, 35, 15, 10);
+    g->addModule(new ModuleCpu("conciso-laptop-leon"), 30, 15, 15, 10);
+    g->addModule(new ModuleRam("conciso-laptop-leon"), 30, 25, 15, 10);
+    g->addModule(new ModuleCpu("alarmpi"), 15, 15, 15, 10);
+    g->addModule(new ModuleRam("alarmpi"), 15, 25, 15, 10);
+    g->addModule(new ModuleSwp("alarmpi"), 15, 35, 15, 10);
+    g->addModule(new ModuleTime(), 15, 0, 22, 15);
+    g->addModule(new ModuleTimer(), 37, 0, 23, 15);
+    g->addModule(new ModulePing({"10.4.12.200", "leons-pc", "leons-telefon", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 15, 50, 15, 10);
+    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 0, 0, 15, 60);
 
 
     std::cout << "Startup finished" << std::endl;
