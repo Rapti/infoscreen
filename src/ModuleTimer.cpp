@@ -45,7 +45,6 @@ void ModuleTimer::updateTarget() {
 void ModuleTimer::draw() {
 	sf::Text text;
 	text.setFont(monospace); // Must be a monospace font or everything will start to look weird.
-
 	std::stringstream ss;
 
 	int h, m, s, ms;

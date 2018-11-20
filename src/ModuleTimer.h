@@ -27,7 +27,7 @@ private:
 	float charHeight100 = 0;
 	float charSpacing100 = 0;
 	int padding = 10;
-	int testSize = 100;
+	int testSize = 300;
 
 	float animationDuration = 0.5; // in seconds
 
