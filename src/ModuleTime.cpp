@@ -52,7 +52,8 @@ void ModuleTime::draw() {
     int paddingX = 20;
     int paddingY = 10;
 
-    text.setCharacterSize(80);
+	unsigned int testSize = 200;
+	text.setCharacterSize(testSize);
 	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 
     text.setString("00:00:00");
@@ -61,11 +62,11 @@ void ModuleTime::draw() {
 		float scaleX = (getDisplayWidth() - 2 * paddingX) / textrect.width;
 		float scaleY = (timeAndDateRatio * getDisplayHeight() - 2 * paddingY) / (textrect.height);
 		float scale = std::min(scaleX, scaleY);
+		text.setScale(scale, scale);
 		float x = (getDisplayWidth() - scale * textrect.width) / 2;
 		float y = (getDisplayHeight() * timeAndDateRatio - scale * textrect.height) / 2;
 		text.setPosition(x, y);
 		text.move(x - text.getGlobalBounds().left, y - text.getGlobalBounds().top); // Because somehow setPosition doesn't really set the desired position
-		text.setScale(scale, scale);
 	}
 
 	ss << std::setw(2) << std::setfill('0') << time->tm_hour << ":";
