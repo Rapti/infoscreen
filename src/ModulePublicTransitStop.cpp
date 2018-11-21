@@ -41,7 +41,7 @@ void ModulePublicTransitStop::draw() {
 	sf::Text text;
 	text.setFont(natural);
 	text.setCharacterSize(testSize);
-	text.setString("HB1 Dortmund Eichlinghofen H-Bahn HEHEHEHEHOHOHO");
+	text.setString("HB1 Dortmund Eichlinghofen H-Bahn");
 	float tw = text.getLocalBounds().width;
 	float lw = 3;
 
