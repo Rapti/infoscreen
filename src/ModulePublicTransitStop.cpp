@@ -19,6 +19,11 @@ ModulePublicTransitStop::ModulePublicTransitStop(const std::string &city, const 
 	thread = new std::thread(&ModulePublicTransitStop::refreshLoop, std::ref(*this));
 }
 
+
+ModulePublicTransitStop::ModulePublicTransitStop(const std::string &city, const std::string &stop, std::vector<std::string> types): ModulePublicTransitStop(city, stop) {
+	this->types = types;
+}
+
 ModulePublicTransitStop::~ModulePublicTransitStop() {
 	active = false;
 	thread->detach();
@@ -240,6 +245,21 @@ void ModulePublicTransitStop::refreshLoop() {
 			for (rapidjson::Value::ValueIterator i = data["raw"].Begin(); i != data["raw"].End(); ++i) {
 				Train* t = nullptr;
 				rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::MemoryPoolAllocator<>> &jsonTrain = *i;
+
+
+				if(!types.empty()) {
+					bool accept = false;
+					for (auto type = types.begin(); type != types.end(); ++type) {
+						if (jsonTrain["lineref"]["type"].GetString() == *type) {
+							accept = true;
+							break;
+						}
+					}
+					if(!accept)
+						continue;
+				}
+
+
 				std::string id = std::string(jsonTrain["lineref"]["identifier"].GetString()) + " " +
 								 jsonTrain["sched_time"].GetString();
 				for (auto candidate: trains) {

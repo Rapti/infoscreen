@@ -17,6 +17,7 @@ private:
     std::string city;
     std::string stop;
 	std::list<Train*> trains;
+	std::vector<std::string> types;
 
 
 	void refreshLoop();
@@ -27,6 +28,7 @@ private:
 
 public:
     ModulePublicTransitStop(const std::string &city, const std::string &stop);
+    ModulePublicTransitStop(const std::string &city, const std::string &stop, std::vector<std::string> types);
 
     virtual ~ModulePublicTransitStop();
 	virtual void draw();

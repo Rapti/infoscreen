@@ -59,7 +59,7 @@ void Screen::run() {
     g->addModule(new ModuleTime(), 15, 0, 22, 15);
     g->addModule(new ModuleTimer(), 37, 0, 23, 15);
     g->addModule(new ModulePing({"10.4.12.200", "leons-pc", "leons-telefon", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 15, 50, 15, 10);
-    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S"), 0, 0, 15, 60);
+    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S", {"S-Bahn", "H-Bahn"}), 0, 0, 15, 60);
 
 
     std::cout << "Startup finished" << std::endl;
