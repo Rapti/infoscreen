@@ -39,49 +39,60 @@ void ModuleTime::draw() {
         initialsecs = (int) timet;
     tm* time = localtime(&timet);
 
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    unsigned long long hs =
-            (unsigned long long)(tv.tv_sec) * 100 +
-            (unsigned long long)(tv.tv_usec) / 100;
+    //Uncomment for hundredths of a second
+//    struct timeval tv;
+//    gettimeofday(&tv, nullptr);
+//    unsigned long long hs =
+//            (unsigned long long)(tv.tv_sec) * 100 +
+//            (unsigned long long)(tv.tv_usec) / 100;
 
     std::stringstream ss;
 
     float timeAndDateRatio = 0.6;
-    int padding = 10;
+    int paddingX = 20;
+    int paddingY = 10;
 
     text.setCharacterSize(80);
-    text.setString("00:00:00");
-    sf::FloatRect textrect = text.getLocalBounds();
-    float scaleX = (getDisplayWidth() - 2*padding) / textrect.width;
-    float scaleY = (timeAndDateRatio * getDisplayHeight() - 2*padding) / (textrect.height);
-    float scale = std::min(scaleX, scaleY);
-    text.setCharacterSize(80 * scale);
-    ss << std::setw(2) << std::setfill('0') << time->tm_hour << ":";
-    ss << std::setw(2) << std::setfill('0') << time->tm_min << ":";
-    ss << std::setw(2) << std::setfill('0') << time->tm_sec;
-//    ss << ":" << std::setw(2) << std::setfill('0') << (hs % 100); // Uncomment this to add hundreds of a second to the clock
-    text.setString(ss.str());
-
 	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
-    text.setPosition((getDisplayWidth() - scale * textrect.width) / 2, 0);
+
+    text.setString("00:00:00");
+	{
+		sf::FloatRect textrect = text.getLocalBounds();
+		float scaleX = (getDisplayWidth() - 2 * paddingX) / textrect.width;
+		float scaleY = (timeAndDateRatio * getDisplayHeight() - 2 * paddingY) / (textrect.height);
+		float scale = std::min(scaleX, scaleY);
+		float x = (getDisplayWidth() - scale * textrect.width) / 2;
+		float y = (getDisplayHeight() * timeAndDateRatio - scale * textrect.height) / 2;
+		text.setPosition(x, y);
+		text.move(x - text.getGlobalBounds().left, y - text.getGlobalBounds().top); // Because somehow setPosition doesn't really set the desired position
+		text.setScale(scale, scale);
+	}
+
+	ss << std::setw(2) << std::setfill('0') << time->tm_hour << ":";
+	ss << std::setw(2) << std::setfill('0') << time->tm_min << ":";
+	ss << std::setw(2) << std::setfill('0') << time->tm_sec;
+//    ss << ":" << std::setw(2) << std::setfill('0') << (hs % 100); // Uncomment this to add hundredths of a second to the clock
+	text.setString(ss.str());
     t->draw(text);
 
+	ss.str(std::string());
+	ss << time->tm_mday << "." << time->tm_mon + 1 << "." << (time->tm_year + 1900);
+	text.setString(ss.str());
+	text.setFillColor(Screen::singleton->getTheme()->getTextSecondary());
 
-    text.setCharacterSize(80);
+	{
+		sf::FloatRect textrect = text.getLocalBounds();
+		float scaleX = (getDisplayWidth() - 2 * paddingX) / textrect.width;
+		float scaleY = ((1 - timeAndDateRatio) * getDisplayHeight() - 2 * paddingY) / textrect.height;
+		float scale = std::min(scaleX, scaleY);
+		text.setScale(scale, scale);
 
-    ss.str(std::string());
-    ss << time->tm_mday << "." << time->tm_mon + 1 << "." << (time->tm_year + 1900);
-    text.setString(ss.str());
-    textrect = text.getLocalBounds();
-    padding = 10;
-    scaleX = (getDisplayWidth() - 2*padding) / textrect.width;
-    scaleY = ((1-timeAndDateRatio) * getDisplayHeight() - 2*padding) / textrect.height;
-    scale = std::min(scaleX, scaleY);
-    text.setCharacterSize(80 * scale);
+		float x = (getDisplayWidth() - scale * textrect.width) / 2;
+		float y = getDisplayHeight() * timeAndDateRatio + (getDisplayHeight() * (1-timeAndDateRatio) - scale * textrect.height) / 2;
+		text.setPosition(x, y);
+		text.move(x - text.getGlobalBounds().left, y -  text.getGlobalBounds().top); // Because somehow setPosition doesn't really set the desired position
+	}
 
-    text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
-    text.setPosition((getDisplayWidth() - scale * textrect.width) / 2, getDisplayHeight() * timeAndDateRatio + 0);
     t->draw(text);
 
 
