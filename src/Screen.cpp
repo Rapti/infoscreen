@@ -48,17 +48,17 @@ sf::RenderWindow* Screen::getWindow() {
 
 void Screen::run() {
 //    g->addModule(new ModuleDatausage(), 0, 0, 3, 1);
-    g->addModule(new ModuleCpu("leons-pc"), 45, 15, 15, 10);
-    g->addModule(new ModuleRam("leons-pc"), 45, 25, 15, 10);
-    g->addModule(new ModuleSwp("leons-pc"), 45, 35, 15, 10);
-    g->addModule(new ModuleCpu("conciso-laptop-leon"), 30, 15, 15, 10);
-    g->addModule(new ModuleRam("conciso-laptop-leon"), 30, 25, 15, 10);
-    g->addModule(new ModuleCpu("alarmpi"), 15, 15, 15, 10);
-    g->addModule(new ModuleRam("alarmpi"), 15, 25, 15, 10);
-    g->addModule(new ModuleSwp("alarmpi"), 15, 35, 15, 10);
+    g->addModule(new ModuleCpu("pumpkin"), 45, 15, 15, 10);
+    g->addModule(new ModuleRam("pumpkin"), 45, 25, 15, 10);
+    g->addModule(new ModuleSwp("pumpkin"), 45, 35, 15, 10);
+    g->addModule(new ModuleCpu("fred"), 30, 15, 15, 10);
+    g->addModule(new ModuleRam("fred"), 30, 25, 15, 10);
+    g->addModule(new ModuleCpu("dottie"), 15, 15, 15, 10);
+    g->addModule(new ModuleRam("dottie"), 15, 25, 15, 10);
+    g->addModule(new ModuleSwp("dottie"), 15, 35, 15, 10);
     g->addModule(new ModuleTime(), 15, 0, 22, 15);
     g->addModule(new ModuleTimer(), 37, 0, 23, 15);
-    g->addModule(new ModulePing({"10.4.12.200", "leons-pc", "leons-telefon", "server.raptilic.us"}, {"Bluelou", "Rechner", "Telefon", "Kimsufi"}), 15, 50, 15, 10);
+    g->addModule(new ModulePing({"pumpkin", "dottie", "server.raptilic.us", "10.4.12.200", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Tabitha", "Bluelou", "Telefon", "Internet"}), 15, 50, 15, 10);
     g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S", {"S-Bahn", "Bus"}), 0, 0, 15, 60);
 
 
