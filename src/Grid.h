@@ -37,7 +37,7 @@ private:
     int gridHeight = 0;
     int displayWidth = 0;
     int displayHeight = 0;
-    int margin = 16;
+    int margin = 10;
     sf::RenderTexture mask;
 	bool redrawMask = true;
 

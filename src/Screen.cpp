@@ -48,18 +48,30 @@ sf::RenderWindow* Screen::getWindow() {
 
 void Screen::run() {
 //    g->addModule(new ModuleDatausage(), 0, 0, 3, 1);
-    g->addModule(new ModuleCpu("pumpkin"), 45, 15, 15, 10);
-    g->addModule(new ModuleRam("pumpkin"), 45, 25, 15, 10);
-    g->addModule(new ModuleSwp("pumpkin"), 45, 35, 15, 10);
-    g->addModule(new ModuleCpu("fred"), 30, 15, 15, 10);
-    g->addModule(new ModuleRam("fred"), 30, 25, 15, 10);
-    g->addModule(new ModuleCpu("dottie"), 15, 15, 15, 10);
-    g->addModule(new ModuleRam("dottie"), 15, 25, 15, 10);
-    g->addModule(new ModuleSwp("dottie"), 15, 35, 15, 10);
-    g->addModule(new ModuleTime(), 15, 0, 22, 15);
-    g->addModule(new ModuleTimer(), 37, 0, 23, 15);
+    g->addModule(new ModuleCpu("pumpkin"), 48, 15, 12, 8);
+    g->addModule(new ModuleRam("pumpkin"), 48, 23, 12, 8);
+    g->addModule(new ModuleSwp("pumpkin"), 48, 31, 12, 8);
+    g->addModule(new ModuleCpu("fred"),    36, 15, 12, 8);
+    g->addModule(new ModuleRam("fred"),    36, 23, 12, 8);
+    g->addModule(new ModuleSwp("fred"),    36, 31, 12, 8);
+	g->addModule(new ModuleCpu("tabitha"), 24, 15, 12, 8);
+	g->addModule(new ModuleRam("tabitha"), 24, 23, 12, 8);
+	g->addModule(new ModuleSwp("tabitha"), 24, 31, 12, 8);
+    g->addModule(new ModuleCpu("dottie"),  12, 15, 12, 8);
+    g->addModule(new ModuleRam("dottie"),  12, 23, 12, 8);
+    g->addModule(new ModuleSwp("dottie"),  12, 31, 12, 8);
+//    g->addModule(new ModuleCpu("pumpkin"), 45, 15, 15, 10);
+//    g->addModule(new ModuleRam("pumpkin"), 45, 25, 15, 10);
+//    g->addModule(new ModuleSwp("pumpkin"), 45, 35, 15, 10);
+//    g->addModule(new ModuleCpu("fred"), 30, 15, 15, 10);
+//    g->addModule(new ModuleRam("fred"), 30, 25, 15, 10);
+//    g->addModule(new ModuleCpu("dottie"), 15, 15, 15, 10);
+//    g->addModule(new ModuleRam("dottie"), 15, 25, 15, 10);
+//    g->addModule(new ModuleSwp("dottie"), 15, 35, 15, 10);
+    g->addModule(new ModuleTime(), 12, 0, 24, 15);
+    g->addModule(new ModuleTimer(), 36, 0, 24, 15);
     g->addModule(new ModulePing({"pumpkin", "dottie", "server.raptilic.us", "10.4.12.200", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Tabitha", "Bluelou", "Telefon", "Internet"}), 15, 50, 15, 10);
-    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S", {"S-Bahn", "Bus"}), 0, 0, 15, 60);
+    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S", {"S-Bahn", "Bus"}), 0, 0, 12, 60);
 
 
     std::cout << "Startup finished" << std::endl;
