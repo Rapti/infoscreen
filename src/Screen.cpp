@@ -27,7 +27,7 @@ Screen::Screen() {
 //    window = new sf::RenderWindow(sf::VideoMode(800, 600), "Test");
     view.reset(sf::FloatRect(0, 0, 1366, 768));
     window->setView(view);
-
+	window->setPosition(sf::Vector2i(0,0));
     g = new Grid(60, 60);
     t = new ThemeDefault();
     t = new ThemeMovingShapes(ShapeTheme::THEME_4);
@@ -62,7 +62,7 @@ void Screen::run() {
     g->addModule(new ModuleSwp("dottie"),  12, 31, 12, 8);
     g->addModule(new ModuleTime(), 12, 0, 24, 15);
     g->addModule(new ModuleTimer(), 36, 0, 24, 15);
-    g->addModule(new ModulePing({"pumpkin", "dottie", "server.raptilic.us", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Tabitha", "Telefon", "Internet"}), 15, 50, 15, 10);
+    g->addModule(new ModulePing({"pumpkin", "dottie", "server.raptilic.us", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Tabitha", "Telefon", "Internet"}), 48, 50, 12, 10);
     g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S", {"S-Bahn", "Bus"}), 0, 0, 12, 60);
 
 

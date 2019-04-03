@@ -94,13 +94,13 @@ void ModuleSystemusage::refreshLoop() {
                 break;
         }
 
-        int user;
-        int nice;
-        int system;
-        int idle;
-        int iowait;
-        int irq;
-        int softirq;
+        long user;
+        long nice;
+        long system;
+        long idle;
+        long iowait;
+        long irq;
+        long softirq;
 
         iss >> user;
         iss >> nice;
