@@ -303,7 +303,7 @@ void ModulePublicTransitStop::refreshLoop() {
 				tm.tm_sec = 0;
 				time_t time = mktime(&tm);
 				struct tm* localtm = gmtime(&time);
-//				time = mktime(localtm);
+				time = mktime(localtm);
 //			std::cout << ss.str() << std::endl;
 //			std::cout << asctime(localtime(&time)) << std::endl;
 				t->setDeparture(time);

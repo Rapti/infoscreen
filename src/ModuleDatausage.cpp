@@ -106,13 +106,15 @@ void ModuleDatausage::draw() {
         float week = (60 * 60 * 24 * 7);
         //float weekprogress = ((time - (60*60*24)) % week) * 1.0 / week;
         float weekprogress = ((((tm->tm_wday + 2) % 7) * 24 + tm->tm_hour) * 60 + tm->tm_min) * 60 + tm->tm_sec;
+//        float weekprogress = (((tm->tm_hour + 15) % 24) * 60 + tm->tm_min) * 60 + tm->tm_sec;
 
+		weekprogress *= tlwidth / week;
 
-        dayline.setSize(sf::Vector2f(1, tlheight));
-        for(int i = 1; i < 7; ++i) {
-            dayline.setPosition(tlwidth * i / 7, 0);
-            t->draw(dayline);
-        }
+//        dayline.setSize(sf::Vector2f(1, tlheight));
+//        for(int i = 1; i < 7; ++i) {
+//            dayline.setPosition(tlwidth * i / 7, 0);
+//            t->draw(dayline);
+//        }
 
         
         rect.setPosition(xoffset, yoffset);
@@ -133,16 +135,15 @@ void ModuleDatausage::draw() {
 //            timediffsecs = weekprogress - (week * total / limit);
 
 
-        weekprogress *= tlwidth / week;
-        int trianglesize = 9;
-        tri[0].position = sf::Vector2f(xoffset + weekprogress - trianglesize, yoffset);
-        tri[1].position = sf::Vector2f(xoffset + weekprogress + trianglesize, yoffset);
-        tri[2].position = sf::Vector2f(xoffset + weekprogress, trianglesize + yoffset);
-        tri[3].position = sf::Vector2f(xoffset + weekprogress - trianglesize, tlheight + yoffset);
-        tri[4].position = sf::Vector2f(xoffset + weekprogress + trianglesize, tlheight + yoffset);
-        tri[5].position = sf::Vector2f(xoffset + weekprogress, tlheight + yoffset - trianglesize);
+//        int trianglesize = 9;
+//        tri[0].position = sf::Vector2f(xoffset + weekprogress - trianglesize, yoffset);
+//        tri[1].position = sf::Vector2f(xoffset + weekprogress + trianglesize, yoffset);
+//        tri[2].position = sf::Vector2f(xoffset + weekprogress, trianglesize + yoffset);
+//        tri[3].position = sf::Vector2f(xoffset + weekprogress - trianglesize, tlheight + yoffset);
+//        tri[4].position = sf::Vector2f(xoffset + weekprogress + trianglesize, tlheight + yoffset);
+//        tri[5].position = sf::Vector2f(xoffset + weekprogress, tlheight + yoffset - trianglesize);
 
-        t->draw(tri);
+//        t->draw(tri);
 
 
         sf::Text text;

@@ -11,6 +11,7 @@
 #include "ModuleDatausage.h"
 #include "ModulePing.h"
 #include "ModulePublicTransitStop.h"
+#include "ModuleLabel.h"
 
 
 Screen* Screen::singleton;
@@ -47,19 +48,23 @@ sf::RenderWindow* Screen::getWindow() {
 
 
 void Screen::run() {
-//    g->addModule(new ModuleDatausage(), 0, 0, 3, 1);
-    g->addModule(new ModuleCpu("pumpkin"), 48, 15, 12, 8);
-    g->addModule(new ModuleRam("pumpkin"), 48, 23, 12, 8);
-    g->addModule(new ModuleSwp("pumpkin"), 48, 31, 12, 8);
-    g->addModule(new ModuleCpu("fred"),    36, 15, 12, 8);
-    g->addModule(new ModuleRam("fred"),    36, 23, 12, 8);
-    g->addModule(new ModuleSwp("fred"),    36, 31, 12, 8);
-	g->addModule(new ModuleCpu("tabitha"), 24, 15, 12, 8);
-	g->addModule(new ModuleRam("tabitha"), 24, 23, 12, 8);
-	g->addModule(new ModuleSwp("tabitha"), 24, 31, 12, 8);
-    g->addModule(new ModuleCpu("dottie"),  12, 15, 12, 8);
-    g->addModule(new ModuleRam("dottie"),  12, 23, 12, 8);
-    g->addModule(new ModuleSwp("dottie"),  12, 31, 12, 8);
+//    g->addModule(new ModuleDatausage(), 12, 43, 48, 7);
+	g->addModule(new ModuleLabel("Pumpkin"), 48, 15, 12, 4);
+    g->addModule(new ModuleCpu("pumpkin"), 48, 19, 12, 8);
+    g->addModule(new ModuleRam("pumpkin"), 48, 27, 12, 8);
+    g->addModule(new ModuleSwp("pumpkin"), 48, 35, 12, 8);
+	g->addModule(new ModuleLabel("Fred"), 36, 15, 12, 4);
+    g->addModule(new ModuleCpu("fred"),    36, 19, 12, 8);
+    g->addModule(new ModuleRam("fred"),    36, 27, 12, 8);
+    g->addModule(new ModuleSwp("fred"),    36, 35, 12, 8);
+	g->addModule(new ModuleLabel("Tabitha"), 24, 15, 12, 4);
+	g->addModule(new ModuleCpu("tabitha"), 24, 19, 12, 8);
+	g->addModule(new ModuleRam("tabitha"), 24, 27, 12, 8);
+	g->addModule(new ModuleSwp("tabitha"), 24, 35, 12, 8);
+	g->addModule(new ModuleLabel("Dottie"), 12, 15, 12, 4);
+    g->addModule(new ModuleCpu("dottie"),  12, 19, 12, 8);
+    g->addModule(new ModuleRam("dottie"),  12, 27, 12, 8);
+    g->addModule(new ModuleSwp("dottie"),  12, 35, 12, 8);
     g->addModule(new ModuleTime(), 12, 0, 24, 15);
     g->addModule(new ModuleTimer(), 36, 0, 24, 15);
     g->addModule(new ModulePing({"pumpkin", "dottie", "server.raptilic.us", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Tabitha", "Telefon", "Internet"}), 48, 50, 12, 10);

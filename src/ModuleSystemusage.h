@@ -16,7 +16,7 @@ static const int MIN_GAP_WIDTH = 10;
 class ModuleSystemusage: public Module {
 
 public:
-	explicit ModuleSystemusage(std::string host);
+	explicit ModuleSystemusage(const std::string& host);
 	~ModuleSystemusage() override;
 protected:
     static std::unordered_map<std::string, std::list<ModuleSystemusage*>*> map;

@@ -11,7 +11,7 @@
 
 std::unordered_map<std::string, std::list<ModuleSystemusage*>*> ModuleSystemusage::map;
 
-ModuleSystemusage::ModuleSystemusage(std::string host) : Module() {
+ModuleSystemusage::ModuleSystemusage(const std::string& host) : Module() {
     ModuleSystemusage::host = host;
     if(map.count(host)) {
         ModuleSystemusage* ref = map[host]->front();
