@@ -68,7 +68,8 @@ void Screen::run() {
     g->addModule(new ModuleTime(), 12, 0, 24, 15);
     g->addModule(new ModuleTimer(), 36, 0, 24, 15);
     g->addModule(new ModulePing({"pumpkin", "dottie", "server.raptilic.us", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Tabitha", "Telefon", "Internet"}), 48, 50, 12, 10);
-    g->addModule(new ModulePublicTransitStop("Dortmund", "Universität S", {"S-Bahn", "Bus"}), 0, 0, 12, 60);
+    g->addModule(new ModulePublicTransitStop(20000131, {"S-Bahn", "R-Bahn"}), 0, 0, 12, 60); // Dortmund HBF
+    g->addModule(new ModulePublicTransitStop(20000454), 12, 43, 12, 17); // Dortmund Leopoldstraße
 
 
     std::cout << "Startup finished" << std::endl;
@@ -90,9 +91,10 @@ void Screen::renderLoop() {
         sf::Event event{};
         while (window->pollEvent(event)) {
             // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                window->close();
-            if (event.type == sf::Event::Resized) {
+            if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+				window->close();
+				delete g;
+			} else if (event.type == sf::Event::Resized) {
                 view.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
                 view.setSize(event.size.width, event.size.height);
                 window->setView(view);
