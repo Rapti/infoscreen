@@ -29,7 +29,7 @@ protected:
 	void draw() override;
 	void draw(std::list<sf::Vector2f*>);
 
-	std::__cxx11::string bytesToHumanReadableFormat(long bytes) const;
+	std::string bytesToHumanReadableFormat(long bytes) const;
 
 private:
     void refreshLoop();

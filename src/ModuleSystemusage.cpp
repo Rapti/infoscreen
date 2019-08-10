@@ -144,7 +144,7 @@ std::string ModuleSystemusage::exec(const char* cmd) {
         return result;
 }
 
-std::__cxx11::string ModuleSystemusage::bytesToHumanReadableFormat(const long bytes) const {
+std::string ModuleSystemusage::bytesToHumanReadableFormat(const long bytes) const {
 	std::stringstream ss;
 	if(bytes > 1024 * 1024 * 1024) {
 		ss << 100 * bytes / (1024 * 1024 * 1024) / (float) 100;
