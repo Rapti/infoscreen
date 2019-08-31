@@ -293,7 +293,7 @@ void ModulePublicTransitStop::refreshLoop() {
 ////				tm.tm_yday = jsonTime["minute"].GetInt();
 //				tm.tm_mon = jsonTime["month"].GetInt();
 //				tm.tm_year = jsonTime["year"].GetInt();
-					tm.tm_isdst = 0;
+					tm.tm_isdst = -1;
 
 					std::stringstream ss;
 					ss << std::setw(2) << std::setfill('0') << jsonTime["day"].GetString() << ".";
@@ -301,12 +301,12 @@ void ModulePublicTransitStop::refreshLoop() {
 					ss << std::setw(4) << std::setfill('0') << jsonTime["year"].GetString() << " ";
 					ss << std::setw(2) << std::setfill('0') << jsonTime["hour"].GetString() << ":";
 					ss << std::setw(2) << std::setfill('0') << jsonTime["minute"].GetString();
-					mktime(&tm);
+//					mktime(&tm);
 //					std::cout << ss.str() << std::endl;
 					ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
 					time_t time = mktime(&tm);
-					struct tm* localtm = gmtime(&time);
-					time = mktime(localtm);
+//					struct tm* localtm = gmtime(&time);
+//					time = mktime(localtm);
 
 					std::string id =
 							std::string(jsonLine["stateless"].GetString()) + " " + jsonTime["hour"].GetString() + ":" +
