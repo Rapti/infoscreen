@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 class SystemusageSnapshot;
+class Disk;
 static const int MIN_GAP_WIDTH = 10;
 
 class ModuleSystemusage: public Module {
@@ -39,6 +40,7 @@ private:
 };
 
 
+
 class SystemusageSnapshot {
 private:
 	const sf::Clock c;
@@ -48,21 +50,40 @@ private:
 	const long totalmem;
 	const long swp;
 	const long totalswp;
+	const std::list<Disk*>* disks;
 public:
-	const long getCpu() const;
-	const long getTotalcpu() const;
-	const long getMem() const;
-	const long getTotalmem() const;
-	const long getSwp() const;
-	const long getTotalswp() const;
-	const float getCpuSince(SystemusageSnapshot*) const;
+	long getCpu() const;
+	long getTotalcpu() const;
+	long getMem() const;
+	long getTotalmem() const;
+	long getSwp() const;
+	long getTotalswp() const;
+	const std::list<Disk*>* getDisks() const;
+	float getCpuSince(SystemusageSnapshot*) const;
 
 public:
-	SystemusageSnapshot(sf::Clock, long, long, long, long, long, long);
+	SystemusageSnapshot(sf::Clock, long cpu, long totalcpu, long ram, long totalram, long swp, long totalswp, std::list<Disk*>* disks);
 	virtual ~SystemusageSnapshot();
 
 	sf::Time getAge();
 
+};
+
+class Disk {
+private:
+	const std::string source;
+	const std::string mountpoint;
+	const long capacity;
+	const long used;
+public:
+	Disk(std::string source, std::string mountpoint, const long capacity, const long used);
+	virtual ~Disk();
+public:
+	const std::string &getSource() const;
+	const std::string &getMountpoint() const;
+	const long getCapacity() const;
+	const long getUsed() const;
+	const double getUsedPercentage() const;
 };
 
 #endif //INFOSCREEN_MODULESYSTEMUSAGE_H

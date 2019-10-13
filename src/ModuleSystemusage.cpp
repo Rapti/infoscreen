@@ -4,9 +4,12 @@
 
 #include "ModuleRam.h"
 #include "Screen.h"
+#include "ModuleSystemusage.h"
+
 #include <sstream>
 #include <cmath>
 #include <iomanip>
+#include <utility>
 
 
 std::unordered_map<std::string, std::list<ModuleSystemusage*>*> ModuleSystemusage::map;
@@ -57,7 +60,7 @@ void ModuleSystemusage::draw() {}
 
 void ModuleSystemusage::refreshLoop() {
     sf::Clock clock;
-    std::string str = "ssh "+host+" free -b \\; cat /proc/stat \\| head -n1";
+    std::string str = "ssh "+host+R"( free -b \; cat /proc/stat \| head -n1 \; df --block-size=1 --output=source,size,avail,target)";
     const char* cmd = str.c_str();
     while(active) {
         std::string result = exec(cmd);
@@ -73,11 +76,11 @@ void ModuleSystemusage::refreshLoop() {
         }
 		long totalmem = -1, mem = -1, totalswp = -1, swp = -1, totalcpu = -1, cpu = -1, dump = -1;
         iss >> totalmem;        // total
-        iss >> dump;    // Used
-        iss >> dump;    // Free
-        iss >> dump;    // Shared
-        iss >> dump;    // Cache
-        iss >> mem;    // Available
+        iss >> dump;   			// Used
+        iss >> dump;   			// Free
+        iss >> dump;   			// Shared
+        iss >> dump;   			// Cache
+        iss >> mem;    			// Available
         mem = totalmem - mem;
 
 
@@ -113,6 +116,26 @@ void ModuleSystemusage::refreshLoop() {
         cpu = user + nice + system;
         totalcpu = user + nice + system + idle + iowait + irq + softirq;
 
+		while(iss >> word) {
+			if(word == "Mounted on" || word == "Eingehängt auf")
+				break;
+		}
+
+		auto* disks = new std::list<Disk*>();
+
+		while(iss >> word) {
+			std::string source;
+			std::string mountpoint;
+			long capacity;
+			long used;
+
+			source = word;
+			iss >> mountpoint;
+			iss >> capacity;
+			iss >> used;
+
+			disks->push_back(new Disk(source, mountpoint, capacity, used));
+		}
 
 		mutex->lock();
 		while(!snapshots->empty() && (snapshots->front() == nullptr || snapshots->front()->getAge().asSeconds() > 200)) {
@@ -121,7 +144,7 @@ void ModuleSystemusage::refreshLoop() {
 		}
 
 		if(cpu >= 0 && totalcpu >= 0 && mem >= 0 && totalmem >= 0 && swp >= 0 && totalswp >= 0)
-			snapshots->push_back(new SystemusageSnapshot(c, cpu, totalcpu, mem, totalmem, swp, totalswp));
+			snapshots->push_back(new SystemusageSnapshot(c, cpu, totalcpu, mem, totalmem, swp, totalswp, disks));
         mutex->unlock();
 
         int d = updateInterval - clock.getElapsedTime().asMilliseconds();
@@ -190,44 +213,81 @@ void ModuleSystemusage::draw(std::list<sf::Vector2f*> points) {
 SystemusageSnapshot::SystemusageSnapshot(sf::Clock c,
 										 long cpu, long totalcpu,
 										 long mem, long totalmem,
-										 long swp, long totalswp):
+										 long swp, long totalswp,
+										 std::list<Disk*>* disks):
 		c(c),
 		cpu(cpu), totalcpu(totalcpu),
 		mem(mem), totalmem(totalmem),
-		swp(swp), totalswp(totalswp) {
+		swp(swp), totalswp(totalswp),
+		disks(disks) {
 }
 
-SystemusageSnapshot::~SystemusageSnapshot() = default;
+SystemusageSnapshot::~SystemusageSnapshot() {
+	for(auto* disk: *disks) {
+		delete disk;
+	}
+	delete disks;
+};
 
 sf::Time SystemusageSnapshot::getAge() {
 	return c.getElapsedTime();
 }
 
-const long SystemusageSnapshot::getCpu() const {
+long SystemusageSnapshot::getCpu() const {
 	return cpu;
 }
 
-const long SystemusageSnapshot::getTotalcpu() const {
+long SystemusageSnapshot::getTotalcpu() const {
 	return totalcpu;
 }
 
-const long SystemusageSnapshot::getMem() const {
+long SystemusageSnapshot::getMem() const {
 	return mem;
 }
 
-const long SystemusageSnapshot::getTotalmem() const {
+long SystemusageSnapshot::getTotalmem() const {
 	return totalmem;
 }
 
-const long SystemusageSnapshot::getSwp() const {
+long SystemusageSnapshot::getSwp() const {
 	return swp;
 }
 
-const long SystemusageSnapshot::getTotalswp() const {
+long SystemusageSnapshot::getTotalswp() const {
 	return totalswp;
 }
 
-const float SystemusageSnapshot::getCpuSince(SystemusageSnapshot* s) const {
+const std::list<Disk*>* SystemusageSnapshot::getDisks() const {
+	return disks;
+}
+float SystemusageSnapshot::getCpuSince(SystemusageSnapshot* s) const {
 	return (float) (cpu - s->cpu) / (totalcpu - s->totalcpu);
 }
 
+
+Disk::Disk(std::string source, std::string mountpoint, const long capacity, const long used) : source(std::move(source)), mountpoint(std::move(mountpoint)),
+																				  capacity(capacity), used(used) {}
+
+Disk::~Disk() {
+	std::cout << "Disk " << source << ": " << getUsedPercentage() << " % used" << std::endl;
+}
+
+const std::string &Disk::getSource() const {
+	return source;
+}
+
+const std::string &Disk::getMountpoint() const {
+	return mountpoint;
+}
+
+const long Disk::getCapacity() const {
+	return capacity;
+}
+
+const long Disk::getUsed() const {
+	return used;
+}
+
+const double Disk::getUsedPercentage() const {
+	return (capacity / used) * 100;
+};
