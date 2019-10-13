@@ -9,7 +9,7 @@
 
 class ModuleRam: public ModuleSystemusage {
 public:
-	explicit ModuleRam(std::string);
+	explicit ModuleRam(std::string host);
 	~ModuleRam() override;
     void draw() override;
 

@@ -9,7 +9,7 @@
 
 class ModuleSwp: public ModuleSystemusage {
 public:
-	explicit ModuleSwp(std::string);
+	explicit ModuleSwp(std::string host);
 	~ModuleSwp() override;
     void draw() override;
 private:

@@ -9,7 +9,7 @@
 
 class ModuleCpu: public ModuleSystemusage {
 public:
-    ModuleCpu(std::string);
+    ModuleCpu(std::string host);
     virtual ~ModuleCpu();
     void draw();
 };
