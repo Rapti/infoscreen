@@ -14,6 +14,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Shader.hpp>
+#include <thread>
 
 class Shape;
 
@@ -27,6 +28,7 @@ enum ShapeTheme {
 class ThemeMovingShapes: public Theme {
 public:
 	ThemeMovingShapes(ShapeTheme st);
+	ThemeMovingShapes(ShapeTheme st, std::string host, int pin_red, int pin_green, int pin_blue);
 
 	void drawBackgroundTo(sf::RenderTarget* canvas) override;
 
@@ -55,6 +57,15 @@ protected:
 	bool moreShapesNeeded();
 	bool tooManyShapes();
 	ShapeTheme st;
+
+	void ledUpdateLoop();
+
+	std::string host;
+	int pin_red;
+	int pin_blue;
+	int pin_green;
+	std::thread* thread;
+	bool active = false;
 
 private:
 	void drawBackgroundTo(sf::RenderTarget* canvas, int blur);
@@ -104,6 +115,7 @@ class ShapeStyle4: public Shape {
 public:
 	ShapeStyle4(float w, float h): Shape() {};
 	void reset(float screenw, float screenh, bool anywhere);
+	static sf::Time getClockTime();
 private:
 	static sf::Clock clock;
 };

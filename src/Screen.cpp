@@ -31,7 +31,7 @@ Screen::Screen() {
 	window->setPosition(sf::Vector2i(0,0));
     g = new Grid(60, 60);
     t = new ThemeDefault();
-    t = new ThemeMovingShapes(ShapeTheme::THEME_4);
+    t = new ThemeMovingShapes(ShapeTheme::THEME_4, "dottie", 17, 22, 24);
 
 }
 Screen::~Screen() {
