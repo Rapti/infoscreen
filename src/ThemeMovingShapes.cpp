@@ -98,15 +98,26 @@ ThemeMovingShapes::~ThemeMovingShapes() {
 
 void ThemeMovingShapes::ledUpdateLoop() {
 	while(active) {
-		sf::Color c = hsv(ShapeStyle4::getClockTime().asSeconds() / -2.5, 1, 1);
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+		int r = 0, g = 0, b = 0;
+
+		if (shapes.size() > 0) {
+			for (auto shape: shapes) {
+				r += shape->r;
+				g += shape->g;
+				b += shape->b;
+			}
+			r /= shapes.size();
+			g /= shapes.size();
+			b /= shapes.size();
+		}
 		std::stringstream ss;
 		ss << "ssh -x " << host;
-		ss << " pigs p " << pin_red << " " << std::to_string(c.r) << "\\; ";
-		ss << " pigs p " << pin_green << " " << std::to_string(c.g) << "\\; ";
-		ss << " pigs p " << pin_blue << " " << std::to_string(c.b);
+		ss << " pigs p " << pin_red << " " << r << "\\; ";
+		ss << " pigs p " << pin_green << " " << g << "\\; ";
+		ss << " pigs p " << pin_blue << " " << b;
 		exec(ss.str().c_str());
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 }
 
@@ -357,7 +368,15 @@ void ShapeStyle3::reset(float screenw, float screenh, bool anywhere) {
 sf::Clock ShapeStyle4::clock;
 void ShapeStyle4::reset(float screenw, float screenh, bool anywhere) {
 	float brightness = 0.1;
-	sf::Color c = hsv(clock.getElapsedTime().asSeconds() / -2.5, 1, brightness);
+
+	float hue = clock.getElapsedTime().asSeconds() / -2.5;
+
+	sf::Color c = hsv(hue, 1, 1);
+	r = c.r;
+	g = c.g;
+	b = c.b;
+
+	c = hsv(hue, 1, brightness);
 //	std::cout << clock.getElapsedTime().asMilliseconds() << std::endl;
 //	sf::Color b(255 * brightness, 255 * brightness, 255 * brightness);
 	setFillColor(c);

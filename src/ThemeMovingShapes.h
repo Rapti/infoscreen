@@ -77,6 +77,7 @@ public:
 	virtual ~Shape();
 	virtual void reset(float screenw, float screenh, bool anywhere);
 	bool update(float factor, float screenw, float screenh);
+	int r, g, b;
 protected:
 	float yspeed;
 	float xspeed;
