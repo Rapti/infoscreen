@@ -213,22 +213,17 @@ void ModulePublicTransitStop::refreshLoop() {
 			std::stringstream ss;
 			if(stopID > 0)
 				ss << "http://openservice-test.vrr.de/static02/XML_DM_REQUEST?outputFormat=JSON&mode=direct&sessionID=0&requestID=0&language=DE&locationServerActive=1&useRealtime=1&limit=100&type_dm=stopID&name_dm=" << stopID;
-	//		const char* url = ss.str().c_str();
 			char* url = new char[ss.str().length() +1];
 			std::strcpy(url, ss.str().c_str());
-			std::cout << url<< std::endl;
-	//		ss.str("");
 			std::string result;
 
 			curl_easy_setopt(curl, CURLOPT_URL, url);
 
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
-	//		std::cout << "pointer: " << writefunction << std::endl;
 
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunction);
 
 			CURLcode res = curl_easy_perform(curl);
-	//		std::cout << "curlcode: " << res << std::endl;
 
 
 			if(res != CURLE_OK) {
@@ -298,7 +293,7 @@ void ModulePublicTransitStop::refreshLoop() {
 ////				tm.tm_yday = jsonTime["minute"].GetInt();
 //				tm.tm_mon = jsonTime["month"].GetInt();
 //				tm.tm_year = jsonTime["year"].GetInt();
-					tm.tm_isdst = 0;
+					tm.tm_isdst = -1;
 
 					std::stringstream ss;
 					ss << std::setw(2) << std::setfill('0') << jsonTime["day"].GetString() << ".";
@@ -306,12 +301,12 @@ void ModulePublicTransitStop::refreshLoop() {
 					ss << std::setw(4) << std::setfill('0') << jsonTime["year"].GetString() << " ";
 					ss << std::setw(2) << std::setfill('0') << jsonTime["hour"].GetString() << ":";
 					ss << std::setw(2) << std::setfill('0') << jsonTime["minute"].GetString();
-					mktime(&tm);
-					std::cout << ss.str() << std::endl;
+//					mktime(&tm);
+//					std::cout << ss.str() << std::endl;
 					ss >> std::get_time(&tm, "%d.%m.%Y %H:%M");
 					time_t time = mktime(&tm);
-					struct tm* localtm = gmtime(&time);
-					time = mktime(localtm);
+//					struct tm* localtm = gmtime(&time);
+//					time = mktime(localtm);
 
 					std::string id =
 							std::string(jsonLine["stateless"].GetString()) + " " + jsonTime["hour"].GetString() + ":" +
@@ -408,9 +403,9 @@ void ModulePublicTransitStop::refreshLoop() {
 					time_t time = t->getDeparture();
 					struct tm tm;
 					tm = *localtime(&time);
-					std::cout << ceil(difftime(t->getDeparture(), now) / 60) + t->getDelay() << std::endl;
-					std::cout << tm.tm_mday << "." << tm.tm_mon << "." << tm.tm_year << " " << tm.tm_hour << ":"
-							  << tm.tm_min << " " << t->getDelay() << std::endl;
+//					std::cout << ceil(difftime(t->getDeparture(), now) / 60) + t->getDelay() << std::endl;
+//					std::cout << tm.tm_mday << "." << tm.tm_mon << "." << tm.tm_year << " " << tm.tm_hour << ":"
+//							  << tm.tm_min << " " << t->getDelay() << std::endl;
 				}
 			}
 			for (Train* t: trains) {
