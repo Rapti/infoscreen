@@ -12,6 +12,7 @@
 #include "ModulePing.h"
 #include "ModulePublicTransitStop.h"
 #include "ModuleLabel.h"
+#include "ModuleDiskusage.h"
 
 
 Screen* Screen::singleton;
@@ -71,6 +72,7 @@ void Screen::run() {
     g->addModule(new ModulePublicTransitStop(20000131, {"S-Bahn", "R-Bahn"}), 0, 0, 12, 60); // Dortmund HBF
     g->addModule(new ModulePublicTransitStop(20000454), 12, 43, 12, 17); // Dortmund Leopoldstraße
     g->addModule(new ModulePublicTransitStop(20000362), 24, 43, 12, 17); // Dortmund Nordmarkt
+    g->addModule(new ModuleDiskusage("pumpkin", {"/"}), 36, 43, 12, 17);
 
     // Stop ID herausfinden:
     // http://openservice-test.vrr.de/static02/XML_STOPFINDER_REQUEST?sessionID=0&requestID=0&outputFormat=JSON&anguage=DE&type_sf=stop&place_sf=Dortmund&name_sf= [Name]

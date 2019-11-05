@@ -84,6 +84,8 @@ public:
 	const long getCapacity() const;
 	const long getUsed() const;
 	const double getUsedPercentage() const;
+
+	bool is(std::string path);
 };
 
 #endif //INFOSCREEN_MODULESYSTEMUSAGE_H

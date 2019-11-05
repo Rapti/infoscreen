@@ -60,7 +60,7 @@ void ModuleSystemusage::draw() {}
 
 void ModuleSystemusage::refreshLoop() {
     sf::Clock clock;
-    std::string str = "ssh "+host+R"( free -b \; cat /proc/stat \| head -n1 \; df --block-size=1 --output=source,size,avail,target)";
+    std::string str = "ssh -x "+host+R"( free -b \; cat /proc/stat \| head -n1 \; df --block-size=1 --output=source,target,size,avail)";
     const char* cmd = str.c_str();
     while(active) {
         std::string result = exec(cmd);
@@ -117,7 +117,7 @@ void ModuleSystemusage::refreshLoop() {
         totalcpu = user + nice + system + idle + iowait + irq + softirq;
 
 		while(iss >> word) {
-			if(word == "Mounted on" || word == "Eingehängt auf")
+			if(word == "Avail" || word == "Verf.")
 				break;
 		}
 
@@ -133,6 +133,8 @@ void ModuleSystemusage::refreshLoop() {
 			iss >> mountpoint;
 			iss >> capacity;
 			iss >> used;
+
+//			std::cout << "Source: " << source << " Mountpoint: " << mountpoint << " Capacity: " << capacity << " Used: " << used << std::endl;
 
 			disks->push_back(new Disk(source, mountpoint, capacity, used));
 		}
@@ -289,5 +291,9 @@ const long Disk::getUsed() const {
 }
 
 const double Disk::getUsedPercentage() const {
-	return (capacity / used) * 100;
+	return ((double) used / capacity) * 100;
+}
+
+bool Disk::is(std::string path) {
+	return source == path || mountpoint == path;
 };
