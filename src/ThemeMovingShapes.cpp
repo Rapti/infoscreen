@@ -50,7 +50,7 @@ ThemeMovingShapes::ThemeMovingShapes(ShapeTheme st) : Theme() {
 
 
 //	ModuleBG = sf::Color(255, 255, 255, 48);
-	ModuleBG = sf::Color(0, 0, 0, 48);
+	ModuleBG = sf::Color(0, 0, 0, /*48*/ 0);
 //	ModuleBG = sf::Color(255, 255, 255, 0);
 //	ModuleOutline = sf::Color(255, 255, 255, 48);
 	ModuleOutline = sf::Color(255, 255, 255, 0);
@@ -98,7 +98,7 @@ ThemeMovingShapes::~ThemeMovingShapes() {
 
 void ThemeMovingShapes::ledUpdateLoop() {
 	while(active) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
 		int r = 0, g = 0, b = 0;
 
@@ -370,6 +370,11 @@ void ShapeStyle4::reset(float screenw, float screenh, bool anywhere) {
 	float brightness = 0.1;
 
 	float hue = clock.getElapsedTime().asSeconds() / -2.5;
+
+	if(anywhere) {
+		hue = rand() % 360;
+		brightness = 0.15;
+	}
 
 	sf::Color c = hsv(hue, 1, 1);
 	r = c.r;
