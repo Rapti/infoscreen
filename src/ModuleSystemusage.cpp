@@ -74,7 +74,7 @@ void ModuleSystemusage::refreshLoop() {
             if(word == "Mem:" || word == "Speicher:")
                 break;
         }
-		long totalmem = -1, mem = -1, totalswp = -1, swp = -1, totalcpu = -1, cpu = -1, dump = -1;
+		long totalmem = -1, mem = -1, totalswp = -1, swp = -1, totalcpu = -1, cpu = -1, nicedcpu = -1, dump = -1;
         iss >> totalmem;        // total
         iss >> dump;   			// Used
         iss >> dump;   			// Free
@@ -113,8 +113,9 @@ void ModuleSystemusage::refreshLoop() {
         iss >> irq;
         iss >> softirq;
 
-        cpu = user + nice + system;
-        totalcpu = user + nice + system + idle + iowait + irq + softirq;
+        cpu = user + system;
+        nicedcpu = cpu + nice;
+        totalcpu = nicedcpu + idle + iowait + irq + softirq;
 
 		while(iss >> word) {
 			if(word == "Avail" || word == "Verf.")
@@ -146,7 +147,7 @@ void ModuleSystemusage::refreshLoop() {
 		}
 
 		if(cpu >= 0 && totalcpu >= 0 && mem >= 0 && totalmem >= 0 && swp >= 0 && totalswp >= 0)
-			snapshots->push_back(new SystemusageSnapshot(c, cpu, totalcpu, mem, totalmem, swp, totalswp, disks));
+			snapshots->push_back(new SystemusageSnapshot(c, cpu, nicedcpu, totalcpu, mem, totalmem, swp, totalswp, disks));
         mutex->unlock();
 
         int d = updateInterval - clock.getElapsedTime().asMilliseconds();
@@ -213,12 +214,12 @@ void ModuleSystemusage::draw(std::list<sf::Vector2f*> points) {
 }
 
 SystemusageSnapshot::SystemusageSnapshot(sf::Clock c,
-										 long cpu, long totalcpu,
+										 long cpu, long nicedcpu, long totalcpu,
 										 long mem, long totalmem,
 										 long swp, long totalswp,
 										 std::list<Disk*>* disks):
 		c(c),
-		cpu(cpu), totalcpu(totalcpu),
+		cpu(cpu), nicedcpu(nicedcpu), totalcpu(totalcpu),
 		mem(mem), totalmem(totalmem),
 		swp(swp), totalswp(totalswp),
 		disks(disks) {
@@ -237,6 +238,10 @@ sf::Time SystemusageSnapshot::getAge() {
 
 long SystemusageSnapshot::getCpu() const {
 	return cpu;
+}
+
+long SystemusageSnapshot::getNicedCpu() const {
+	return nicedcpu;
 }
 
 long SystemusageSnapshot::getTotalcpu() const {

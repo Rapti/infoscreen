@@ -72,7 +72,7 @@ void Screen::run() {
     g->addModule(new ModulePublicTransitStop(20000131, {"S-Bahn", "R-Bahn"}), 0, 0, 12, 60); // Dortmund HBF
     g->addModule(new ModulePublicTransitStop(20000454), 12, 43, 12, 17); // Dortmund Leopoldstraße
     g->addModule(new ModulePublicTransitStop(20000362), 24, 43, 12, 17); // Dortmund Nordmarkt
-    g->addModule(new ModuleDiskusage("pumpkin", {"/"}), 36, 43, 12, 17);
+//    g->addModule(new ModuleDiskusage("pumpkin", {"/"}), 36, 43, 12, 17);
 
     // Stop ID herausfinden:
     // http://openservice-test.vrr.de/static02/XML_STOPFINDER_REQUEST?sessionID=0&requestID=0&outputFormat=JSON&anguage=DE&type_sf=stop&place_sf=Dortmund&name_sf= [Name]
@@ -98,7 +98,8 @@ void Screen::renderLoop() {
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
 				window->close();
-				delete g;
+				exit(0);
+//				delete g;
 			} else if (event.type == sf::Event::Resized) {
                 view.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
                 view.setSize(event.size.width, event.size.height);

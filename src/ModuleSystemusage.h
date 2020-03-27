@@ -45,6 +45,7 @@ class SystemusageSnapshot {
 private:
 	const sf::Clock c;
 	const long cpu;
+	const long nicedcpu;
 	const long totalcpu;
 	const long mem;
 	const long totalmem;
@@ -53,6 +54,7 @@ private:
 	const std::list<Disk*>* disks;
 public:
 	long getCpu() const;
+	long getNicedCpu() const;
 	long getTotalcpu() const;
 	long getMem() const;
 	long getTotalmem() const;
@@ -62,7 +64,7 @@ public:
 	float getCpuSince(SystemusageSnapshot*) const;
 
 public:
-	SystemusageSnapshot(sf::Clock, long cpu, long totalcpu, long ram, long totalram, long swp, long totalswp, std::list<Disk*>* disks);
+	SystemusageSnapshot(sf::Clock, long cpu, long nicedcpu, long totalcpu, long ram, long totalram, long swp, long totalswp, std::list<Disk*>* disks);
 	virtual ~SystemusageSnapshot();
 
 	sf::Time getAge();
