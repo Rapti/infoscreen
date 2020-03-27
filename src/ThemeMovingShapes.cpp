@@ -5,8 +5,40 @@
 #include <cmath>
 #include <iostream>
 #include <SFML/Graphics/Sprite.hpp>
+#include <sstream>
 #include "ThemeMovingShapes.h"
 #include "Screen.h"
+#include "main.h"
+
+
+// hue: 0-360°; sat: 0.f-1.f; val: 0.f-1.f
+sf::Color hsv(int hue, float sat, float val) {
+	hue %= 360;
+	while(hue<0) hue += 360;
+
+	if(sat<0.f) sat = 0.f;
+	if(sat>1.f) sat = 1.f;
+
+	if(val<0.f) val = 0.f;
+	if(val>1.f) val = 1.f;
+
+	int h = hue/60;
+	float f = float(hue)/60-h;
+	float p = val*(1.f-sat);
+	float q = val*(1.f-sat*f);
+	float t = val*(1.f-sat*(1-f));
+
+	switch(h) {
+		default:
+		case 0:
+		case 6: return sf::Color(val*255, t*255, p*255);
+		case 1: return sf::Color(q*255, val*255, p*255);
+		case 2: return sf::Color(p*255, val*255, t*255);
+		case 3: return sf::Color(p*255, q*255, val*255);
+		case 4: return sf::Color(t*255, p*255, val*255);
+		case 5: return sf::Color(val*255, p*255, q*255);
+	}
+}
 
 ThemeMovingShapes::ThemeMovingShapes(ShapeTheme st) : Theme() {
 	this->st = st;
@@ -18,7 +50,7 @@ ThemeMovingShapes::ThemeMovingShapes(ShapeTheme st) : Theme() {
 
 
 //	ModuleBG = sf::Color(255, 255, 255, 48);
-	ModuleBG = sf::Color(0, 0, 0, 48);
+	ModuleBG = sf::Color(0, 0, 0, /*48*/ 0);
 //	ModuleBG = sf::Color(255, 255, 255, 0);
 //	ModuleOutline = sf::Color(255, 255, 255, 48);
 	ModuleOutline = sf::Color(255, 255, 255, 0);
@@ -42,7 +74,18 @@ ThemeMovingShapes::ThemeMovingShapes(ShapeTheme st) : Theme() {
 
 }
 
+ThemeMovingShapes::ThemeMovingShapes(ShapeTheme st, std::string host, int pin_red, int pin_green, int pin_blue): ThemeMovingShapes(st) {
+	this->host = host;
+	this->pin_red = pin_red;
+	this->pin_green = pin_green;
+	this->pin_blue = pin_blue;
+	active = true;
+	thread = new std::thread(&ThemeMovingShapes::ledUpdateLoop, std::ref(*this));
+}
+
+
 ThemeMovingShapes::~ThemeMovingShapes() {
+	active = false;
 	for(auto shape: shapes) {
 		delete shape;
 	}
@@ -51,6 +94,31 @@ ThemeMovingShapes::~ThemeMovingShapes() {
 	delete blurTexture1;
 	delete blurTexture2;
 	delete blurTexture3;
+}
+
+void ThemeMovingShapes::ledUpdateLoop() {
+	while(active) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+
+		int r = 0, g = 0, b = 0;
+
+		if (shapes.size() > 0) {
+			for (auto shape: shapes) {
+				r += shape->r;
+				g += shape->g;
+				b += shape->b;
+			}
+			r /= shapes.size();
+			g /= shapes.size();
+			b /= shapes.size();
+		}
+		std::stringstream ss;
+		ss << "ssh -x " << host;
+		ss << " pigs p " << pin_red << " " << r << "\\; ";
+		ss << " pigs p " << pin_green << " " << g << "\\; ";
+		ss << " pigs p " << pin_blue << " " << b;
+		exec(ss.str().c_str());
+	}
 }
 
 void ThemeMovingShapes::updateDisplaySize(unsigned int w, unsigned int h) {
@@ -297,42 +365,31 @@ void ShapeStyle3::reset(float screenw, float screenh, bool anywhere) {
 	setPointCount(4);
 }
 
-// hue: 0-360°; sat: 0.f-1.f; val: 0.f-1.f
-sf::Color hsv(int hue, float sat, float val) {
-	hue %= 360;
-	while(hue<0) hue += 360;
-
-	if(sat<0.f) sat = 0.f;
-	if(sat>1.f) sat = 1.f;
-
-	if(val<0.f) val = 0.f;
-	if(val>1.f) val = 1.f;
-
-	int h = hue/60;
-	float f = float(hue)/60-h;
-	float p = val*(1.f-sat);
-	float q = val*(1.f-sat*f);
-	float t = val*(1.f-sat*(1-f));
-
-	switch(h) {
-		default:
-		case 0:
-		case 6: return sf::Color(val*255, t*255, p*255);
-		case 1: return sf::Color(q*255, val*255, p*255);
-		case 2: return sf::Color(p*255, val*255, t*255);
-		case 3: return sf::Color(p*255, q*255, val*255);
-		case 4: return sf::Color(t*255, p*255, val*255);
-		case 5: return sf::Color(val*255, p*255, q*255);
-	}
-}
 sf::Clock ShapeStyle4::clock;
 void ShapeStyle4::reset(float screenw, float screenh, bool anywhere) {
 	float brightness = 0.1;
-	sf::Color c = hsv(clock.getElapsedTime().asSeconds() / -2.5, 1, brightness);
+
+	float hue = clock.getElapsedTime().asSeconds() / -2.5;
+
+	if(anywhere) {
+		hue = rand() % 360;
+		brightness = 0.15;
+	}
+
+	sf::Color c = hsv(hue, 1, 1);
+	r = c.r;
+	g = c.g;
+	b = c.b;
+
+	c = hsv(hue, 1, brightness);
 //	std::cout << clock.getElapsedTime().asMilliseconds() << std::endl;
-	sf::Color b(255 * brightness, 255 * brightness, 255 * brightness);
+//	sf::Color b(255 * brightness, 255 * brightness, 255 * brightness);
 	setFillColor(c);
 	Shape::reset(screenw, screenh, anywhere);
 	xspeed *= 0.5;
 	yspeed *= 0.5;
+}
+
+sf::Time ShapeStyle4::getClockTime() {
+	return clock.getElapsedTime();
 }
