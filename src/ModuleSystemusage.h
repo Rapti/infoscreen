@@ -28,7 +28,7 @@ protected:
     sf::RectangleShape line;
     std::mutex* mutex;
 	void draw() override;
-	void draw(std::list<sf::Vector2f*>);
+	void draw(std::list<sf::Vector3f*>);
 
 	std::string bytesToHumanReadableFormat(long bytes) const;
 
@@ -37,6 +37,8 @@ private:
     bool active;
     std::thread* thread;
     std::string exec(const char* cmd);
+
+	void drawLine(float x1, float y1, float x2, float y2);
 };
 
 
@@ -62,6 +64,7 @@ public:
 	long getTotalswp() const;
 	const std::list<Disk*>* getDisks() const;
 	float getCpuSince(SystemusageSnapshot*) const;
+	float getNicedCpuSince(SystemusageSnapshot*) const;
 
 public:
 	SystemusageSnapshot(sf::Clock, long cpu, long nicedcpu, long totalcpu, long ram, long totalram, long swp, long totalswp, std::list<Disk*>* disks);

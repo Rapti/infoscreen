@@ -20,7 +20,7 @@ void ModuleCpu::draw() {
 		SystemusageSnapshot* last = nullptr;
 		double displayvalue = -1;
 		for (auto i = ++snapshots->begin(); i != snapshots->end();) {
-			std::list<sf::Vector2f*> points;
+			std::list<sf::Vector3f*> points;
 			for (; i != snapshots->end();) {
 				if (*i) {
 					if (last == nullptr || (last->getAge().asSeconds() - (*i)->getAge().asSeconds()) < MIN_GAP_WIDTH) {
@@ -43,8 +43,9 @@ void ModuleCpu::draw() {
 
 						if(s != *i) {
 							points.push_back(
-									new sf::Vector2f(
+									new sf::Vector3f(
 											3 + (1 - (*i)->getAge().asSeconds() / cycleDuration) * getDisplayWidth(),
+											(1 - (*i)->getNicedCpuSince(s)) * getDisplayHeight(),
 											(1 - (*i)->getCpuSince(s)) * getDisplayHeight()));
 							if(i == --snapshots->end())
 								displayvalue = (*i)->getCpuSince(s);
@@ -62,7 +63,7 @@ void ModuleCpu::draw() {
 			}
 			if (points.size() > 1)
 				ModuleSystemusage::draw(points);
-			for (sf::Vector2f* v: points) delete v;
+			for (sf::Vector3f* v: points) delete v;
 			points.clear();
 		}
 

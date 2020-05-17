@@ -14,13 +14,13 @@ void ModuleRam::draw() {
     if (!snapshots->empty()) {
 		SystemusageSnapshot* last = nullptr;
 		for(auto i = snapshots->begin(); i != snapshots->end();) {
-			std::list<sf::Vector2f*> points;
+			std::list<sf::Vector3f*> points;
 			for(; i != snapshots->end();) {
 				if(*i && *i != nullptr) {
 					if(last == nullptr || (last->getAge() - (*i)->getAge()).asSeconds() < MIN_GAP_WIDTH) {
-						points.push_back(new sf::Vector2f(3 + (1 - (*i)->getAge().asSeconds() / (float) 180) * getDisplayWidth(),
+						points.push_back(new sf::Vector3f(3 + (1 - (*i)->getAge().asSeconds() / (float) 180) * getDisplayWidth(),
 														  (1 - (float) (*i)->getMem() / (*i)->getTotalmem()) *
-														  getDisplayHeight()));
+														  getDisplayHeight(), -1));
 						last = *i;
 						++i;
 					} else {
@@ -34,7 +34,7 @@ void ModuleRam::draw() {
 			}
 			if(points.size() > 1)
 				ModuleSystemusage::draw(points);
-			for(sf::Vector2f* v: points) delete v;
+			for(sf::Vector3f* v: points) delete v;
 			points.clear();
 		}
 

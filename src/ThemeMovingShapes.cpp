@@ -80,7 +80,8 @@ ThemeMovingShapes::ThemeMovingShapes(ShapeTheme st, std::string host, int pin_re
 	this->pin_green = pin_green;
 	this->pin_blue = pin_blue;
 	active = true;
-	thread = new std::thread(&ThemeMovingShapes::ledUpdateLoop, std::ref(*this));
+	if(!host.empty())
+		thread = new std::thread(&ThemeMovingShapes::ledUpdateLoop, std::ref(*this));
 }
 
 

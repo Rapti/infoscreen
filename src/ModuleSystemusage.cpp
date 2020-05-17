@@ -188,29 +188,39 @@ std::string ModuleSystemusage::bytesToHumanReadableFormat(const long bytes) cons
 	return ss.str();
 }
 
-void ModuleSystemusage::draw(std::list<sf::Vector2f*> points) {
+// z component contains cpu time of niced processes when drawing cpu meter
+void ModuleSystemusage::draw(std::list<sf::Vector3f*> points) {
 	if(points.size() < 2) return;
-	int xoffset = 0;
-	int yoffset = 0;
-	float tlheight = getDisplayHeight() - 1.5F*yoffset;
+	float tlheight = getDisplayHeight();
 
 	sf::VertexArray bg = sf::VertexArray(sf::TrianglesStrip, points.size() * 2);
 	int i = 0;
 	for (auto &point : points) {
-		bg[2*i].position = sf::Vector2f(xoffset + point->x, tlheight);
-		bg[2*i+1].position = sf::Vector2f(xoffset + point->x, yoffset + point->y);
+		bg[2*i].position = sf::Vector2f(point->x, tlheight);
+		bg[2*i+1].position = sf::Vector2f(point->x, point->y);
 		bg[2*i].color = bg[2*i+1].color = Screen::singleton->getTheme()->getDiagramFill();
 		++i;
 	}
 	t->draw(bg);
-	for(i = 1; i < points.size(); ++i) {
-		sf::Vector2f p1 = bg[2*i-1].position;
-		sf::Vector2f p2 = bg[2*i+1].position;
-		line.setPosition(p1.x - 1.5F, p1.y - 1.5F);
-		line.setSize(sf::Vector2f((float) std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2)) + 3, 3));
-		line.setRotation((float) (std::atan((p2.y - p1.y) / (p2.x - p1.x)) * 180/M_PIl));
-		t->draw(line);
+	sf::Vector3f* last = points.front();
+	for(auto point: points) {
+		if(last->z >= 0 && point->z >= 0 && (last->y != last->z || point->y != point->z)) {
+//			line.setFillColor(Screen::singleton->getTheme()->getDiagramFill());
+			drawLine(last->x, last->z, point->x, point->z);
+//			line.setFillColor(Screen::singleton->getTheme()->getDiagramLine());
+		} else
+			drawLine(last->x, last->y, point->x, point->y);
+		last = point;
 	}
+}
+
+void ModuleSystemusage::drawLine(float x1, float y1, float x2, float y2) {
+	sf::Vector2f p1 = sf::Vector2f(x1, y1);
+	sf::Vector2f p2 = sf::Vector2f(x2, y2);
+	line.setPosition(p1.x - 1.5F, p1.y - 1.5F);
+	line.setSize(sf::Vector2f((float) std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2)) + 3, 3));
+	line.setRotation((float) (std::atan((p2.y - p1.y) / (p2.x - p1.x)) * 180/M_PIl));
+	t->draw(line);
 }
 
 SystemusageSnapshot::SystemusageSnapshot(sf::Clock c,
@@ -269,6 +279,9 @@ const std::list<Disk*>* SystemusageSnapshot::getDisks() const {
 }
 float SystemusageSnapshot::getCpuSince(SystemusageSnapshot* s) const {
 	return (float) (cpu - s->cpu) / (totalcpu - s->totalcpu);
+}
+float SystemusageSnapshot::getNicedCpuSince(SystemusageSnapshot* s) const {
+	return (float) (nicedcpu - s->nicedcpu) / (totalcpu - s->totalcpu);
 }
 
 
