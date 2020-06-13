@@ -9,9 +9,8 @@
 #include "ModuleOctoprint.h"
 #include "Screen.h"
 
-ModuleOctoprint::ModuleOctoprint(const string &apiUrl, const string &apiKey) : apiUrl(apiUrl), apiKey(apiKey) {
-	cout << "Instantiating Octoprint Module" << endl;
-	active = false;
+ModuleOctoprint::ModuleOctoprint(const string &apiUrl, const string &apiKey) : apiUrl(apiUrl), apiKey(apiKey), jobProgress(-1), printTime(-1), printTimeLeft(-1) {
+	active = true;
 	refreshThread = new std::thread(&ModuleOctoprint::refreshLoop, std::ref(*this));}
 
 ModuleOctoprint::~ModuleOctoprint() {
@@ -24,6 +23,8 @@ void ModuleOctoprint::draw() {
 	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 	text.setFont(monospace);
 	text.setCharacterSize((getDisplayHeight() / 2 - 2*outline)*0.6);
+
+	m.lock();
 
 	sf::RectangleShape rect;
 	rect.setSize(sf::Vector2f(getDisplayWidth(), outline));
@@ -119,6 +120,8 @@ void ModuleOctoprint::draw() {
 		text.setPosition(max(leftOffset, getDisplayWidth() - 2*outline - text.getLocalBounds().width), getDisplayHeight() / 2 + outline);
 		t->draw(text);
 	}
+
+	m.unlock();
 }
 
 static size_t writefunction(char *data, size_t size, size_t nmemb,
@@ -137,15 +140,6 @@ void ModuleOctoprint::refreshLoop() {
 
 	char progressApiUrl[apiUrl.length() +5];
 	strcpy(progressApiUrl, (apiUrl + "/job").c_str());
-
-	jobProgress = 0.7;
-	printTime = 128;
-	printTimeLeft = 500;
-	status = "Debugging";
-	file = "Test.gcode";
-	displayFile = file;
-	if(displayFile.ends_with(".gcode"))
-		displayFile.erase(displayFile.length() - 6, string::npos);
 
 	while(active) {
 		clock.restart();
@@ -179,9 +173,6 @@ void ModuleOctoprint::refreshLoop() {
 				continue;
 			}
 			curl_easy_cleanup(curl);
-			cout << "Received data!" << endl;
-			cout << result << endl;
-			cout << apiUrl << endl;
 
 			data.Parse(result.c_str());
 		} catch (std::exception e) {
@@ -198,6 +189,8 @@ void ModuleOctoprint::refreshLoop() {
 				status = data["state"].GetString();
 				if(status.find_first_of("(") != string::npos)
 					status.erase(status.find_first_of("("), string::npos);
+				if(status.find_first_of(":") != string::npos)
+					status.erase(status.find_first_of(":"), string::npos);
 			}
 			else status = "";
 
@@ -225,6 +218,7 @@ void ModuleOctoprint::refreshLoop() {
 			if(progress["printTimeLeft"].IsInt())
 				printTimeLeft = progress["printTimeLeft"].GetInt();
 			else printTimeLeft = -1;
+			m.unlock();
 		} else {
 			cout << "JSON Parse Error!" << endl;
 			cout << data.GetParseError() << endl;
