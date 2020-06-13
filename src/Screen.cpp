@@ -73,7 +73,7 @@ void Screen::run() {
     g->addModule(new ModulePublicTransitStop(20000131, {"S-Bahn", "R-Bahn"}), 0, 0, 12, 60); // Dortmund HBF
     g->addModule(new ModulePublicTransitStop(20000454), 12, 43, 12, 17); // Dortmund Leopoldstraße
     g->addModule(new ModulePublicTransitStop(20000362), 24, 43, 12, 17); // Dortmund Nordmarkt
-    g->addModule(new ModuleOctoprint("192.168.178.75:5000/api", "1327FC722BD44208BCEFFACDE8A118A8"), 36, 43, 12, 17); // Dortmund Nordmarkt
+    g->addModule(new ModuleOctoprint("192.168.178.75:5000/api", "1327FC722BD44208BCEFFACDE8A118A8"), 48, 43, 12, 7);
 //    g->addModule(new ModuleDiskusage("pumpkin", {"/"}), 36, 43, 12, 17);
 
     // Stop ID herausfinden:

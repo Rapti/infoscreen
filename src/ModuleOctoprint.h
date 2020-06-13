@@ -16,6 +16,7 @@ private:
 	const string apiKey;
 	string status;
 	string file;
+	string displayFile;
 	double jobProgress;
 	int printTime;
 	int printTimeLeft;
@@ -23,6 +24,7 @@ private:
 	mutex m;
 	bool active;
 	thread* refreshThread;
+	sf::Clock clock;
 
 	void refreshLoop();
 
