@@ -68,7 +68,7 @@ void Screen::run() {
     g->addModule(new ModuleSwp("dottie"),  12, 35, 12, 8);
     g->addModule(new ModuleTime(), 12, 0, 24, 15);
     g->addModule(new ModuleTimer(), 36, 0, 24, 15);
-    g->addModule(new ModulePing({"pumpkin", "dottie", "server.raptilic.us", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Tabitha", "Telefon", "Internet"}), 48, 50, 12, 10);
+    g->addModule(new ModulePing({"pumpkin", "dottie", "frosty", "server.raptilic.us", "leons-telefon", "google.de"}, {"Pumpkin", "Dottie", "Frosty", "Tabitha", "Telefon", "Internet"}), 48, 50, 12, 10);
     g->addModule(new ModulePublicTransitStop(20000131, {"S-Bahn", "R-Bahn"}), 0, 0, 12, 60); // Dortmund HBF
     g->addModule(new ModulePublicTransitStop(20000454), 12, 43, 12, 17); // Dortmund Leopoldstraße
     g->addModule(new ModulePublicTransitStop(20000362), 24, 43, 12, 17); // Dortmund Nordmarkt
