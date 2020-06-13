@@ -57,8 +57,9 @@ void ModuleOctoprint::refreshLoop() {
 				fprintf(stderr, "curl_easy_perform() failed: %s\n",
 						curl_easy_strerror(res));
 				curl_easy_cleanup(curl);
-				active = false;
-				break;
+
+				std::this_thread::sleep_for(std::chrono::seconds(30));
+				continue;
 			}
 			curl_easy_cleanup(curl);
 			data.Parse(result.c_str());
@@ -71,6 +72,10 @@ void ModuleOctoprint::refreshLoop() {
 
 			auto job = data["job"].GetObject();
 			auto progress = data["progress"].GetObject();
+
+			if(data["status"].IsString())
+				status = data["status"].GetString();
+			else status = "null";
 
 			if(job["file"].IsObject()) {
 				auto f = job["file"].GetObject();
