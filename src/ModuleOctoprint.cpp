@@ -22,7 +22,7 @@ void ModuleOctoprint::draw() {
 	sf::Text text;
 	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 	text.setFont(monospace);
-	text.setCharacterSize((getDisplayHeight() / 2 - 2*outline)*0.5);
+	text.setCharacterSize((getDisplayHeight() / 2 - 2*outline)*0.7);
 
 	m.lock();
 
