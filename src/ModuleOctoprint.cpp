@@ -22,7 +22,7 @@ void ModuleOctoprint::draw() {
 	sf::Text text;
 	text.setFillColor(Screen::singleton->getTheme()->getTextPrimary());
 	text.setFont(monospace);
-	text.setCharacterSize((getDisplayHeight() / 2 - 2*outline)*0.6);
+	text.setCharacterSize((getDisplayHeight() / 2 - 2*outline)*0.5);
 
 	m.lock();
 
@@ -32,10 +32,10 @@ void ModuleOctoprint::draw() {
 	rect.setPosition(0, getDisplayHeight() / 2);
 	rect.setFillColor(Screen::singleton->getTheme()->getDiagramFill());
 	t->draw(rect);
-	float barPos = (getDisplayWidth()-outline) * jobProgress;
+	float barPos = (getDisplayWidth()-outline) * (jobProgress/100);
 	if(jobProgress != -1) {
 		// Horizontal white bar
-		rect.setSize(sf::Vector2f(getDisplayWidth() * jobProgress, outline));
+		rect.setSize(sf::Vector2f(getDisplayWidth() * (jobProgress/100), outline));
 		rect.setFillColor(Screen::singleton->getTheme()->getDiagramLine());
 		t->draw(rect);
 
@@ -49,7 +49,7 @@ void ModuleOctoprint::draw() {
 		rect.setOrigin(0.0, 0.0);
 		rect.setPosition(0, 0);
 		rect.setFillColor(Screen::singleton->getTheme()->getDiagramFill());
-		rect.setSize(sf::Vector2f(getDisplayWidth() * jobProgress, getDisplayHeight() / 2));
+		rect.setSize(sf::Vector2f(getDisplayWidth() * (jobProgress/100), getDisplayHeight() / 2));
 		t->draw(rect);
 
 		std::stringstream ss;
@@ -94,13 +94,13 @@ void ModuleOctoprint::draw() {
 			ss.str("");
 		}
 
-		ss << floor(jobProgress * 100) << "," << ((int) floor(jobProgress * 1000)) % 10 << " %";
+		ss << floor(jobProgress) << "," << ((int) floor(jobProgress * 100)) % 100 << " %";
 		text.setString(ss.str());
 		auto bounds = text.getGlobalBounds();
 		float desiredPos = (getDisplayWidth() - bounds.width) / 2;
-		if(jobProgress <= 0.5 && barPos + 2*outline > desiredPos) {
+		if(jobProgress <= 50 && barPos + 2*outline > desiredPos) {
 			desiredPos = barPos + 2*outline;
-		} else if(jobProgress > 0.5 && barPos < desiredPos + bounds.width + outline) {
+		} else if(jobProgress > 50 && barPos < desiredPos + bounds.width + outline) {
 			desiredPos = barPos - bounds.width - outline;
 		}
 		text.setPosition(desiredPos, outline);
