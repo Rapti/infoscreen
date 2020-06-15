@@ -230,7 +230,9 @@ void ModulePublicTransitStop::refreshLoop() {
 				fprintf(stderr, "curl_easy_perform() failed: %s\n",
 						curl_easy_strerror(res));
 				curl_easy_cleanup(curl);
-				break;
+
+				std::this_thread::sleep_for(std::chrono::seconds(60));
+				continue;
 			}
 			curl_easy_cleanup(curl);
 			data.Parse(result.c_str());
