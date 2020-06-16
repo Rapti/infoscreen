@@ -6,6 +6,7 @@
 #include <curl/curl.h>
 #include <sstream>
 #include <iomanip>
+#include <codecvt>
 #include "ModuleOctoprint.h"
 #include "Screen.h"
 
@@ -195,18 +196,21 @@ void ModuleOctoprint::refreshLoop() {
 			else status = "";
 
 			if(job["file"].IsObject()) {
+				std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 				auto f = job["file"].GetObject();
 				if(f["display"].IsString()) {
-					displayFile = f["display"].GetString();
-					if(displayFile.ends_with(".gcode"))
+					displayFile = converter.from_bytes(string(f["display"].GetString()));
+//					converter.from_bytes(str);
+
+					if(displayFile.ends_with(L".gcode"))
 						displayFile.erase(displayFile.length() - 6, string::npos);
-				} else displayFile = "";
+				} else displayFile = L"";
 				if(f["name"].IsString())
 					file = f["name"].GetString();
 				else file = "";
 			} else {
 				file = "";
-				displayFile = "";
+				displayFile = L"";
 			}
 
 			if(progress["completion"].IsDouble())

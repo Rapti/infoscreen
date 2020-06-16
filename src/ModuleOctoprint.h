@@ -16,7 +16,7 @@ private:
 	const string apiKey;
 	string status;
 	string file;
-	string displayFile;
+	wstring displayFile;
 	double jobProgress;
 	int printTime;
 	int printTimeLeft;
