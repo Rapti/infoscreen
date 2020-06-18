@@ -114,7 +114,7 @@ void ModuleOctoprint::draw() {
 		text.setString(status);
 		text.setPosition(leftOffset, getDisplayHeight() / 2 + outline);
 		t->draw(text);
-		leftOffset = leftOffset * 2 + text.getLocalBounds().width;
+		leftOffset = 4*outline+ text.getLocalBounds().width;
 	}
 	if(!displayFile.empty()) {
 		text.setString(displayFile);
