@@ -95,7 +95,7 @@ void ModuleOctoprint::draw() {
 			ss.str("");
 		}
 
-		ss << floor(jobProgress) << "," << ((int) floor(jobProgress * 100)) % 100 << " %";
+		ss << floor(jobProgress) << "," << setw(2) << setfill('0') << ((int) floor(jobProgress * 100)) % 100 << " %";
 		text.setString(ss.str());
 		auto bounds = text.getGlobalBounds();
 		float desiredPos = (getDisplayWidth() - bounds.width) / 2;
